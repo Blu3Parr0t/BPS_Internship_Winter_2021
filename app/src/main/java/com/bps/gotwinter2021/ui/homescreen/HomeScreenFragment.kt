@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bps.gotwinter2021.R
 
-class HomeScreen : Fragment() {
+class HomeScreenFragment : Fragment() {
 
 
 
