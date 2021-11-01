@@ -86,4 +86,4 @@ lint/tmp/
 # lint/reports/
 
 #Api keys kept from github repo
-app/src/main/java/com/bps/gotwinter2021/common/secret
+app/src/main/java/com/bps/gotwinter2021/common/secret/API.kt
