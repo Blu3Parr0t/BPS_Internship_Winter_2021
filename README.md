@@ -8,6 +8,7 @@ No commits larger than:
 15 files
 1000 lines of code maximum.
 Special exceptions are made for relative changes such as drawable updates, imports, etc.
+Imports such as icons and other drawables do not count to the file count.
 
 String constants:
 Naming convetion should be: fragment_name_title, fragment_name_subtitle, fragment_name_user_name_textbox, etc.
@@ -26,3 +27,5 @@ Naming for viewmodels should reference the fragment that utilizes that viewmode'
 Fragment/Activity/Adapter/Etc naming conventions:
 These classes should follow the same as viewmodels. They should have a distinct and descriptive name as well as the type of data class they are such as MainFragment, MainActivity, 
 ClassesAdapter, etc.
+
+No hardcoded colors
