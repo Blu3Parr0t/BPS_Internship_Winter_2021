@@ -10,4 +10,14 @@
         android:name="com.bps.gotwinter2021.ui.homescreen.HomeScreenFragment"
         android:label="fragment_home_screen"
         tools:layout="@layout/fragment_home_screen" />
+    <fragment
+        android:id="@+id/displayScreenFragment"
+        android:name="com.bps.gotwinter2021.ui.displayscreen.DisplayScreenFragment"
+        android:label="fragment_display_screen"
+        tools:layout="@layout/fragment_display_screen" />
+    <fragment
+        android:id="@+id/theaterMapsFragment"
+        android:name="com.bps.gotwinter2021.ui.theatermap.TheaterMapsFragment"
+        android:label="fragment_theater_maps"
+        tools:layout="@layout/fragment_theater_maps" />
 </navigation>
