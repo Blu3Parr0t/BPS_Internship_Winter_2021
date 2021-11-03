@@ -2,4 +2,7 @@
     <string name="app_name">GOTWinter2021</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bottom_nav_main_item">Main</string>
+    <string name="bottom_nav_favorites_item">Favorites</string>
+    <string name="bottom_nav_theater_item">Theater</string>
 </resources>
