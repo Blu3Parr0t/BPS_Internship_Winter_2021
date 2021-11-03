@@ -8,7 +8,7 @@
         android:icon="@drawable/bottom_nav_face_icon"/>
 
     <item
-        android:id="@+id/displayScreenFragment"
+        android:id="@+id/favoritesFragment"
         android:title="@string/bottom_nav_favorites_item"
         android:icon="@drawable/favorite_border_icon"
         />
