@@ -5,4 +5,7 @@
     <string name="home_screen_name_title">GAME OF THRONES</string>
     <string name="home_screen_search_ET">Search characters by name or house</string>
     <string name="home_screen_search_button">Search</string>
+    <string name="bottom_nav_main_item">Main</string>
+    <string name="bottom_nav_favorites_item">Favorites</string>
+    <string name="bottom_nav_theater_item">Theater</string>
 </resources>
