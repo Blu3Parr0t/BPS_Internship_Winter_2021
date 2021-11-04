@@ -9,19 +9,35 @@
         android:id="@+id/homeScreenFragment"
         android:name="com.bps.gotwinter2021.ui.homescreen.HomeScreen"
         android:label="fragment_home_screen"
-        tools:layout="@layout/fragment_home_screen" />
+        tools:layout="@layout/fragment_home_screen" >
+        <action
+            android:id="@+id/action_homeScreenFragment_to_searchResultsFragment"
+            app:destination="@id/searchResultsFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.bps.gotwinter2021.ui.maps.MapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" >
+        tools:layout="@layout/fragment_maps">
         <action
             android:id="@+id/action_mapsFragment_to_homeScreenFragment"
             app:destination="@id/homeScreenFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.bps.gotwinter2021.ui.favorites.FavoritesFragment"
         android:label="favorites_fragment"
         tools:layout="@layout/favorites_fragment" />
+
+    <fragment
+        android:id="@+id/searchResultsFragment"
+        android:name="com.bps.gotwinter2021.ui.search.SearchResultsFragment"
+        android:label="SearchResultsFragment"
+        tools:layout="@layout/fragment_search_results" >
+        <argument
+            android:name="searchString"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.databinding.FragmentHomeScreenBinding
@@ -32,6 +33,14 @@ class HomeScreen : Fragment() {
         adapter.setData(houses)
         binding.homeScreenRV.adapter = adapter
 
+        viewModel.navigateToSearchResults.observe(viewLifecycleOwner, {
+            if (it){
+                this.findNavController().navigate(HomeScreenDirections.actionHomeScreenFragmentToSearchResultsFragment(
+                    viewModel.searchText.value!!
+                ))
+                viewModel.doneNavigation()
+            }
+        })
         return binding.root
     }
 

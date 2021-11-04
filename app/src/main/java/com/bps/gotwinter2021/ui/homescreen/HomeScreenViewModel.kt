@@ -11,6 +11,9 @@ class HomeScreenViewModel(val app: Application): ViewModel() {
     private val _searchText = MutableLiveData<String?>()
     val searchText: LiveData<String?> = _searchText
 
+    private val _navigateToSearchResults = MutableLiveData<Boolean>()
+    val navigateToSearchResults: LiveData<Boolean> = _navigateToSearchResults
+
     fun updateSearch(text: CharSequence) {
         _searchText.value = text.toString()
     }
@@ -18,10 +21,14 @@ class HomeScreenViewModel(val app: Application): ViewModel() {
     fun searchButton() {
         val length = _searchText.value?.length ?: 0
         if (length > 0){
-            Toast.makeText(app?.applicationContext,"search for ${searchText.value}", Toast.LENGTH_SHORT).show()
+            _navigateToSearchResults.value = true
         }
         else{
             Toast.makeText(app?.applicationContext,"type what you want to search for", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun doneNavigation(){
+        _navigateToSearchResults.value = false
     }
 }
