@@ -6,7 +6,7 @@ import com.bps.gotwinter2021.data.network.repoimpl.GOTRepoImpl
 import kotlinx.coroutines.CoroutineDispatcher
 
 interface GOTRepo {
-    suspend fun fetchCharacterByName(viewmodelDispatcher: CoroutineDispatcher, name: String): ServiceResult<List<GOTResponse>?>
+    suspend fun fetchCharacterByName(viewModelDispatcher: CoroutineDispatcher, name: String): ServiceResult<GOTResponse?>
 
     companion object{
         fun provideGOTRepo(): GOTRepo{

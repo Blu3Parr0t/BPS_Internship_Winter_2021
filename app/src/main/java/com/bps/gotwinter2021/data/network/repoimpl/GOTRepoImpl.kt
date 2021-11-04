@@ -17,9 +17,9 @@ class GOTRepoImpl(): GOTRepo {
     override suspend fun fetchCharacterByName(
         viewmodelDispatcher: CoroutineDispatcher,
         name: String
-    ): ServiceResult<List<GOTResponse>?> {
+    ): ServiceResult<GOTResponse?> {
         return  withContext(viewmodelDispatcher){
-            val dataResponse = retroObject.getCharacterByName(name = name)
+            val dataResponse = retroObject.fetchCharactersByName(name = name)
             if (dataResponse.isSuccessful) {
                 ServiceResult.Succes(dataResponse.body())
             } else {

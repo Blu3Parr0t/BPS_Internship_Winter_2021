@@ -5,11 +5,7 @@ data class GOTResponse(
     val name: String,
     val image: String,
     val house: String,
-    val titles: List<title>,
+    val titles: List<String>,
     val father: String,
     val mother: String
-)
-
-data class title(
-    val title: String
 )

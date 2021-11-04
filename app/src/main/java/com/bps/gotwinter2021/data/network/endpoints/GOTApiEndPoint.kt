@@ -7,7 +7,7 @@ import retrofit2.http.Path
 
 interface GOTApiEndPoint {
     @GET("api/show/characters/{name}")
-    suspend fun getCharacterByName(
+    suspend fun fetchCharactersByName(
         @Path("name") name: String
-    ):Response<List<GOTResponse>?>
+    ):Response<GOTResponse?>
 }
