@@ -8,4 +8,6 @@
     <string name="bottom_nav_main_item">Main</string>
     <string name="bottom_nav_favorites_item">Favorites</string>
     <string name="bottom_nav_theater_item">Theater</string>
+    <string name="favourites_title">FAVOURITES</string>
+    <string name="favourites">FAVOURITES</string>
 </resources>
