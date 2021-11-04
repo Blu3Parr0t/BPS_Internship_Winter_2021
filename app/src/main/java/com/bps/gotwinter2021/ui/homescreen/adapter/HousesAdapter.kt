@@ -21,7 +21,6 @@ class HousesAdapter: RecyclerView.Adapter<HousesViewHolder>() {
 
     fun setData(housesList: List<String?>){
         this.houses = housesList
-        Log.d("Yoshi", "$housesList")
         notifyDataSetChanged()
     }
 }
