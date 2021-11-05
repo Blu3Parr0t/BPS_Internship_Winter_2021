@@ -13,6 +13,8 @@ interface GOTRepo {
                                        radius: Int, type: String, key: String)
             : ServiceResult<GOTTheatre?>
 
+    suspend fun fetchCharactersByHouse(viewModelDispatcher: CoroutineDispatcher, house: String): ServiceResult<List<GOTResponse?>?>
+
     companion object{
         fun provideGOTRepo(): GOTRepo{
             return GOTRepoImpl()

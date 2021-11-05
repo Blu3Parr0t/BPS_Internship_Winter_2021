@@ -12,7 +12,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="@drawable/blurred_fav_bg">
+    android:background="@drawable/blurred_fav_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/hold_title_and_arrow_house"
@@ -21,11 +21,11 @@
         tools:context=".ui.house.HouseFragment">
 
         <TextView
-            android:id="@+id/house_title"
+            android:id="@+id/house_fragment_title"
             style="@style/fragment_big_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HOUSE NAME"
+            android:text="House Placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,5 +43,16 @@
             app:srcCompat="@drawable/back_arrow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/house_fragment_character_grid"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:houseCharacters="@{viewModelHouse.characterFromHouse}"
+        tools:itemCount="4"
+        tools:listitem="@layout/card_item_view"/>
+
 </LinearLayout>
 </layout>

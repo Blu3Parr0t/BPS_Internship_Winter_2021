@@ -20,4 +20,9 @@ interface GOTApiEndPoint {
         @Query("type") type: String,
         @Query("key") key: String
     ): Response<GOTTheatre?>
+
+    @GET("/api/show/characters/byHouse/{house}")
+    suspend fun fetchCharactersByHouse(
+        @Path("house") house: String
+    ) : Response<List<GOTResponse?>?>
 }
