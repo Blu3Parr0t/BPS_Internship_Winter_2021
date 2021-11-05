@@ -2,11 +2,14 @@ package com.bps.gotwinter2021.ui.maps
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.location.Geocoder
 import android.location.Location
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +18,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import com.bps.gotwinter2021.R
+import com.bps.gotwinter2021.common.createViewModel
+import com.bps.gotwinter2021.common.secret.API.API_KEY
+import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -22,8 +28,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.net.PlacesClient
 import timber.log.Timber
 
 class MapsFragment : Fragment() {
@@ -37,6 +44,23 @@ class MapsFragment : Fragment() {
     private lateinit var lastLocation: Location
 
     private lateinit var currentLatLng: LatLng
+
+    private lateinit var placesClient: PlacesClient
+
+    private lateinit var gotIcon: Bitmap
+
+    private lateinit var gotSelectIcon: Bitmap
+
+    private var lastMarker: Marker? = null
+
+    private val viewModel: MapsViewModel by lazy {
+        createViewModel {
+            MapsViewModel(
+                application = this.requireActivity().application,
+                GOTRepo.provideGOTRepo()
+            )
+        }
+    }
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -68,6 +92,12 @@ class MapsFragment : Fragment() {
 
         googleMap.uiSettings.isZoomControlsEnabled = true
 
+        setMapStyle(googleMap)
+
+        googleMap.setOnMarkerClickListener { marker ->
+            onMarkerClick(marker)
+        }
+
         enableMyLocation()
     }
 
@@ -76,6 +106,20 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val bitmap = BitmapFactory.decodeResource(
+            context?.resources, R.drawable.got_theater_icon)
+
+        val bitmap2 = BitmapFactory.decodeResource(
+            context?.resources, R.drawable.got_theater_select_icon)
+
+        gotIcon = Bitmap.createScaledBitmap(
+            bitmap, 100, 100, true
+        )
+
+        gotSelectIcon = Bitmap.createScaledBitmap(
+            bitmap2, 120, 120, true
+        )
 
         fusedLocationClient = LocationServices
             .getFusedLocationProviderClient(this.requireActivity())
@@ -90,6 +134,31 @@ class MapsFragment : Fragment() {
             Timber.d("Permissions already granted.")
         }
 
+        Places.initialize(this.requireContext(), API_KEY)
+
+        placesClient = Places.createClient(this.requireContext())
+
+        viewModel.theaterFeed.observe(viewLifecycleOwner, {
+            it?.results?.forEach { theater ->
+                val theaterLatLng = LatLng(
+                    theater.geometry.location.lat, theater.geometry.location.lng)
+                val snippet = getAddress(theaterLatLng)
+
+                val theaterMarker = googleMap.addMarker(
+                    MarkerOptions()
+                        .position(theaterLatLng)
+                        .title(theater.name)
+                        .snippet(snippet)
+                        .icon(BitmapDescriptorFactory.fromBitmap(gotIcon))
+                )
+                if (theaterMarker != null) {
+                    Timber.d("New marker has been made. " +
+                            "${theaterMarker.title} is located in ${theaterMarker.position}")
+                    theaterMarker.tag = false
+                }
+            }
+        })
+
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -99,7 +168,35 @@ class MapsFragment : Fragment() {
         mapFragment?.getMapAsync(callback)
     }
 
+    private fun getAddress(lat: LatLng): String? {
+        val geocoder = Geocoder(this.requireContext())
+        val list = geocoder.getFromLocation(lat.latitude, lat.longitude,1)
+        return list[0].getAddressLine(0)
+    }
 
+    private fun onMarkerClick(marker: Marker): Boolean {
+        val clickCount = marker.tag as? Boolean
+
+        val distanceLocation = Location("")
+
+        distanceLocation.longitude = marker.position.longitude
+        distanceLocation.latitude = marker.position.latitude
+
+        val distance = lastLocation.distanceTo(distanceLocation) / 1000
+        Timber.d("Distance is: " + distance)
+
+
+        if (clickCount == false) {
+            Timber.d("This marker coordinates: " + marker.snippet)
+
+            lastMarker?.tag = false
+            lastMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(gotIcon))
+            lastMarker = marker
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(gotSelectIcon))
+            marker.tag = true
+        }
+        return true
+    }
 
     private fun isPermissionGranted() : Boolean {
         return ContextCompat.checkSelfPermission(
@@ -126,14 +223,32 @@ class MapsFragment : Fragment() {
                 if (location != null) {
                     lastLocation = location
                     currentLatLng = LatLng(location.latitude, location.longitude)
+                    val locationString = "${location.latitude},${location.longitude}"
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
+                    viewModel.getStores(locationString, 100000, "movie_theater")
                     Timber.d("Made the map")
 
                 }
             }
         }
         else {
-            Timber.d("sad no permissions")
+            Timber.d("Sad, no permissions")
+        }
+    }
+
+    private fun setMapStyle(map: GoogleMap) {
+        try {
+            val success = map.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    this.requireContext(),
+                    R.raw.map_style
+                )
+            )
+            if (!success) {
+                Timber.d("Style parsing failed.")
+            }
+        } catch (e: Resources.NotFoundException) {
+            Timber.d("Cant find style. Error: ", e)
         }
     }
 }
