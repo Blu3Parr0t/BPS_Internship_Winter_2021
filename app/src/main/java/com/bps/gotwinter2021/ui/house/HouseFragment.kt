@@ -32,8 +32,8 @@ class HouseFragment : Fragment() {
         //house selected at home screen
         val houseSelected = HouseFragmentArgs.fromBundle(requireArguments()).houseName
         viewModel.fetchCharactersByHouse(house = "House "+ houseSelected)
-
-        binding.houseCharacterGrid.adapter = HouseGridAdapter()
+        binding.houseFragmentTitle.text = houseSelected
+        binding.houseFragmentCharacterGrid.adapter = HouseGridAdapter()
 
         return binding.root
     }

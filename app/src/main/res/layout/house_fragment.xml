@@ -21,11 +21,11 @@
         tools:context=".ui.house.HouseFragment">
 
         <TextView
-            android:id="@+id/house_title"
+            android:id="@+id/house_fragment_title"
             style="@style/fragment_big_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HOUSE NAME"
+            android:text="House Placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,17 +43,9 @@
             app:srcCompat="@drawable/back_arrow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <TextView
-        android:id="@+id/house_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@{viewModelHouse.characterFromHouse[0].name}"
-        android:textSize="25sp"
-        tools:text="House info here"
-        tools:textColor="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/house_character_grid"
+        android:id="@+id/house_fragment_character_grid"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         android:layout_width="match_parent"

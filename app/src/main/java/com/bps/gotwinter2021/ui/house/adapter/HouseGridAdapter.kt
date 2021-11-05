@@ -23,7 +23,6 @@ class HouseGridAdapter: ListAdapter<GOTResponse, HouseGridAdapter.CharacterByHou
         fun bind(character: GOTResponse){
             binding.character = character
             binding.cardItemViewNameTV.text = character.name
-            //binding.cardItemViewCharacterIV = character.image
             binding.executePendingBindings()
         }
     }
