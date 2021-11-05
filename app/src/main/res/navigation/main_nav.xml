@@ -40,4 +40,13 @@
             android:name="searchString"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/houseFragment"
+        android:name="com.bps.gotwinter2021.ui.house.HouseFragment"
+        android:label="HouseFragment">
+        <argument
+            android:name="houseName"
+            app:argType="string"/>
+    </fragment>
 </navigation>
