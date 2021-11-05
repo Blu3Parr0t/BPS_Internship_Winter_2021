@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         app:houseCharacters="@{viewModelHouse.characterFromHouse}"
         tools:itemCount="4"
-        tools:listitem="@layout/card_item_view"/>
+        tools:listitem="@layout/item_card_view"/>
 
 </LinearLayout>
 </layout>
