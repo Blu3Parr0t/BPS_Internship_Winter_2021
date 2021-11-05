@@ -78,7 +78,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_screen_search_ET"
             app:spanCount="4"
-            tools:listitem="@layout/houses_card_view" />
+            tools:listitem="@layout/houses_card_view"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
