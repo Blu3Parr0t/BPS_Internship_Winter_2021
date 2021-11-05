@@ -33,7 +33,6 @@ class SearchResultsFragment : Fragment() {
         binding.lifecycleOwner = this
         val search = SearchResultsFragmentArgs.fromBundle(requireArguments()).searchString
         viewModel.fetchCharactersByName(search)
-        // Inflate the layout for this fragment
         return binding.root
     }
 }

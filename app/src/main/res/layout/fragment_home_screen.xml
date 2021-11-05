@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.bps.gotwinter2021.ui.homescreen.HomeScreenViewModel" />
@@ -23,9 +24,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/home_screen_name_title"
+            android:fontFamily="@font/calisto_bold"
+            android:text="@string/GOT"
             android:textColor="@color/white"
             android:textSize="24sp"
+            android:theme="@style/fragment_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,14 +40,19 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_corners_search_tv"
             android:ems="10"
             android:hint="@string/home_screen_search_ET"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:onTextChanged="@{(text, start, before, count) -> viewModel.updateSearch(text)}"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="14sp"
-            android:onTextChanged="@{(text, start, before, count) -> viewModel.updateSearch(text)}"
+            app:layout_constraintEnd_toStartOf="@+id/home_screen_search_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_screen_title_TV" />
 
@@ -52,13 +60,12 @@
             android:id="@+id/home_screen_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
             android:background="#00FFFFFF"
-            android:text="@string/home_screen_search_button"
             android:onClick="@{() -> viewModel.searchButton()}"
+            android:text="@string/home_screen_search_button"
+            android:textColor="@color/yellow_bright"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/home_screen_search_ET"
             app:layout_constraintTop_toTopOf="@+id/home_screen_search_ET" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -71,7 +78,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_screen_search_ET"
             app:spanCount="4"
-            tools:listitem="@layout/houses_card_view"/>
+            tools:listitem="@layout/houses_card_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
