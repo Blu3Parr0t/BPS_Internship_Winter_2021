@@ -10,4 +10,9 @@ interface GOTApiEndPoint {
     suspend fun fetchCharactersByName(
         @Path("name") name: String
     ):Response<GOTResponse?>
+
+    @GET("/api/show/characters/byHouse/{house}")
+    suspend fun fetchCharactersByHouse(
+        @Path("house") house: String
+    ) : Response<List<GOTResponse?>?>
 }

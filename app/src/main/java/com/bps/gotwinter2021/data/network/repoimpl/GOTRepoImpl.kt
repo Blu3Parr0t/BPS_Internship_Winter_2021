@@ -14,6 +14,20 @@ class GOTRepoImpl(): GOTRepo {
         "https://api.got.show/"
     )
 
+    override suspend fun fetchCharactersByHouse(
+        viewModelDispatcher: CoroutineDispatcher,
+        house: String
+    ): ServiceResult<List<GOTResponse?>?> {
+        return withContext(viewModelDispatcher){
+            val dataResponse = retroObject.fetchCharactersByHouse(house = house)
+            if(dataResponse.isSuccessful){
+                ServiceResult.Succes(dataResponse.body())
+            } else{
+                ServiceResult.Error(Exception(dataResponse.errorBody().toString()))
+            }
+        }
+    }
+
     override suspend fun fetchCharacterByName(
         viewmodelDispatcher: CoroutineDispatcher,
         name: String

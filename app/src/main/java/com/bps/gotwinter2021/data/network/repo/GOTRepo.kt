@@ -8,6 +8,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 interface GOTRepo {
     suspend fun fetchCharacterByName(viewModelDispatcher: CoroutineDispatcher, name: String): ServiceResult<GOTResponse?>
 
+    suspend fun fetchCharactersByHouse(viewModelDispatcher: CoroutineDispatcher, house: String): ServiceResult<List<GOTResponse?>?>
+
     companion object{
         fun provideGOTRepo(): GOTRepo{
             return GOTRepoImpl()
