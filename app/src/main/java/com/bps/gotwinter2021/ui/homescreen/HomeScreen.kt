@@ -28,7 +28,9 @@ class HomeScreen : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home_screen, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        adapter = HousesAdapter()
+        adapter = HousesAdapter(HousesAdapter.OnClickListener{
+            Log.d("Yoshi", "$it")
+        })
 
         adapter.setData(houses)
         binding.homeScreenRV.adapter = adapter
