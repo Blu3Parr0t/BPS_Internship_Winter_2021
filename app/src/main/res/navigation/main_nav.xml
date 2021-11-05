@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeScreenFragment_to_searchResultsFragment"
             app:destination="@id/searchResultsFragment" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_houseFragment"
+            app:destination="@id/houseFragment" />
     </fragment>
 
     <fragment
