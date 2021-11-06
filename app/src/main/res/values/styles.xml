@@ -20,4 +20,11 @@
         <item name="android:textSize">30sp</item>
         <item name="android:lineSpacingMultiplier">3.0</item>
     </style>
+
+    <style name="fragment_title">
+        <item name="android:textSize">24sp</item>
+        <item name="fontFamily">@font/calisto_bold</item>
+        <item name="android:text">@string/GOT</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

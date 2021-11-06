@@ -2,7 +2,7 @@
     <string name="app_name">GOTWinter2021</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="home_screen_name_title">GAME OF THRONES</string>
+    <string name="GOT">GAME OF THRONES</string>
     <string name="home_screen_search_ET">Search characters by name or house</string>
     <string name="home_screen_search_button">Search</string>
     <string name="bottom_nav_main_item">Main</string>
