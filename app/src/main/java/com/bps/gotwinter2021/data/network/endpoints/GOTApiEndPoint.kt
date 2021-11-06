@@ -13,14 +13,6 @@ interface GOTApiEndPoint {
         @Path("name") name: String
     ):Response<GOTResponse?>
 
-    @GET("/maps/api/place/nearbysearch/json")
-    suspend fun getStores(
-        @Query("location") location: String,
-        @Query("radius") radius: Int,
-        @Query("type") type: String,
-        @Query("key") key: String
-    ): Response<GOTTheatre?>
-
     @GET("/api/show/characters/byHouse/{house}")
     suspend fun fetchCharactersByHouse(
         @Path("house") house: String
