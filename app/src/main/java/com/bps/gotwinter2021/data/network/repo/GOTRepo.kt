@@ -9,10 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 interface GOTRepo {
     suspend fun fetchCharacterByName(viewModelDispatcher: CoroutineDispatcher, name: String): ServiceResult<GOTResponse?>
 
-    suspend fun fetchTheaters(viewModelDispatcher: CoroutineDispatcher, location: String,
-                                       radius: Int, type: String, key: String)
-            : ServiceResult<GOTTheatre?>
-
     suspend fun fetchCharactersByHouse(viewModelDispatcher: CoroutineDispatcher, house: String): ServiceResult<List<GOTResponse?>?>
 
     companion object{

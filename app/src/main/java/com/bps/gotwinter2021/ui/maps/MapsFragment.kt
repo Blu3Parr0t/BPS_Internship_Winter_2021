@@ -20,6 +20,7 @@ import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.common.secret.API.API_KEY
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
+import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
 import com.bps.gotwinter2021.databinding.FragmentMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -61,7 +62,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         createViewModel {
             MapsViewModel(
                 application = this.requireActivity().application,
-                GOTRepo.provideGOTRepo()
+                GoogleMapsRepo.provideGoogleMapsRepo()
             )
         }
     }
