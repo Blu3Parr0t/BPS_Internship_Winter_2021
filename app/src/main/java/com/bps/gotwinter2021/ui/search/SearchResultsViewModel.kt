@@ -22,11 +22,11 @@ class SearchResultsViewModel(val repo: GOTRepo, val app: Application): ViewModel
     private val _characters = MutableLiveData<GOTResponse?>()
     val characters: LiveData<GOTResponse?> = _characters
 
-    private val dispatcher = Dispatchers.IO
+    val dispatcher = Dispatchers
 
     fun fetchCharactersByName(name: String){
-        viewModelScope.launch(dispatcher) {
-            when( val response = repo.fetchCharacterByName(dispatcher,name = name)){
+        viewModelScope.launch(dispatcher.IO) {
+            when( val response = repo.fetchCharacterByName(dispatcher.IO,name = name)){
                 is ServiceResult.Succes -> {
                     _characters.postValue(response.data)
                     Log.d("Yoshi", "Succes: $response")

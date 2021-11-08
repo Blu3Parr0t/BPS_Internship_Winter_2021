@@ -18,8 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
-import com.bps.gotwinter2021.common.secret.API.API_KEY
-import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
 import com.bps.gotwinter2021.databinding.FragmentMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -110,7 +108,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices
             .getFusedLocationProviderClient(this.requireActivity())
 
-        Places.initialize(this.requireContext(), API_KEY)
+        Places.initialize(this.requireContext(), "API_KEY")
 
         placesClient = Places.createClient(this.requireContext())
 

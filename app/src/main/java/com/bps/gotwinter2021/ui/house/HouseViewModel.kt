@@ -18,21 +18,21 @@ class HouseViewModel(val application: Application, val repo: GOTRepo) : ViewMode
     private val _characterFromHouse = MutableLiveData<List<GOTResponse?>?>()
     val characterFromHouse: LiveData<List<GOTResponse?>?> = _characterFromHouse
 
-    private val dispatcher = Dispatchers.IO
+    val dispatcher = Dispatchers
 
     fun fetchCharactersByHouse(house: String){
-        viewModelScope.launch(dispatcher){
-            when(val response = repo.fetchCharactersByHouse(dispatcher, house = house)){
-                is ServiceResult.Succes -> {
-                    _characterFromHouse.postValue(response.data)
-                }
-                is ServiceResult.Error -> {
-                    Timber.d("Error retrieving: " + response.exception)
-                }
-                else -> {
-                    Timber.d("ruh roh")
-                }
-            }
+        viewModelScope.launch(dispatcher.IO){
+//            when(val response = repo.fetchCharactersByHouse(dispatcher.IO, house = house)){
+//                is ServiceResult.Succes -> {
+//                    _characterFromHouse.postValue(response.data)
+//                }
+//                is ServiceResult.Error -> {
+//                    Timber.d("Error retrieving: " + response.exception)
+//                }
+//                else -> {
+//                    Timber.d("ruh roh")
+//                }
+//            }
         }
     }
 }

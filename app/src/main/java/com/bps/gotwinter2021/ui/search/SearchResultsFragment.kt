@@ -8,15 +8,20 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
+import com.bps.gotwinter2021.data.network.endpoints.GOTApiEndPoint
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.databinding.FragmentSearchResultsBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SearchResultsFragment : Fragment() {
+    @Inject lateinit var retroObject: GOTApiEndPoint
 
     val viewModel: SearchResultsViewModel by lazy {
         createViewModel {
             SearchResultsViewModel(
-                GOTRepo.provideGOTRepo(),
+                GOTRepo.provideGOTRepo(this.viewModel.dispatcher, retroObject),
                 requireActivity().application
             )
         }
