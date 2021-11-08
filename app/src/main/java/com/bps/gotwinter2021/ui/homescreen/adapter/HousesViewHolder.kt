@@ -26,7 +26,7 @@ class HousesViewHolder(inflater: LayoutInflater, parent: ViewGroup): RecyclerVie
                 "Greyjoy" -> R.drawable.greyjoy
                 "Tully" -> R.drawable.tully
                 "Arryn" -> R.drawable.arryn
-                "Tyrel" -> R.drawable.tyrell
+                "Tyrell" -> R.drawable.tyrell
                 else -> R.drawable.no_image
             }
         )

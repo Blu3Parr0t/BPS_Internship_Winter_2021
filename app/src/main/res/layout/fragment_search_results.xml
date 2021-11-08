@@ -74,6 +74,7 @@
             app:layout_constraintTop_toBottomOf="@+id/search_results_search_ET">
 
             <TextView
+                android:id="@+id/search_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#BF1b1818"
@@ -90,15 +91,41 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
+            android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"
             app:spanCount="2"
-            tools:listitem="@layout/item_card_view">
+            tools:listitem="@layout/item_card_view" />
 
-        </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:id="@+id/search_results_not_found_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#B3161729 "
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/character_not_found"
+            android:textColor="@color/white"
+            android:textSize="34sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <ImageView
+            android:id="@+id/search_results_loading_IV"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            android:src="@drawable/loading_animation"
+            android:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
