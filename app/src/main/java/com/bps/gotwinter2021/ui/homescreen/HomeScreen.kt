@@ -1,22 +1,21 @@
 package com.bps.gotwinter2021.ui.homescreen
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bps.gotwinter2021.R
-import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.databinding.FragmentHomeScreenBinding
 import com.bps.gotwinter2021.ui.homescreen.adapter.HousesAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeScreen : Fragment() {
-    private val viewModel: HomeScreenViewModel by lazy {
-        createViewModel { HomeScreenViewModel(app = this.requireActivity().application) }
-    }
+    private val viewModel: HomeScreenViewModel by viewModels()
     private lateinit var binding: FragmentHomeScreenBinding
     private lateinit var adapter: HousesAdapter
     private val houses: List<String> = listOf(
@@ -61,4 +60,8 @@ class HomeScreen : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.diTestFunction()
+    }
 }

@@ -8,17 +8,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
+import com.bps.gotwinter2021.data.network.endpoints.GOTApiEndPoint
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.databinding.HouseFragmentBinding
 import com.bps.gotwinter2021.ui.house.adapter.HouseGridAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HouseFragment : Fragment() {
+    @Inject lateinit var retroObject: GOTApiEndPoint
 
     val viewModel: HouseViewModel by lazy{
+
         createViewModel {
             HouseViewModel(
                 requireActivity().application,
-                GOTRepo.provideGOTRepo()
+                GOTRepo.provideGOTRepo(this.viewModel.dispatcher, retroObject)
             )
         }
     }

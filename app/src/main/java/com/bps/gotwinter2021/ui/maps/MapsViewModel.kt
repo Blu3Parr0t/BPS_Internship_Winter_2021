@@ -5,10 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.bps.gotwinter2021.common.secret.API.API_KEY
 import com.bps.gotwinter2021.data.model.GOTTheatre
 import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
-import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +20,7 @@ class MapsViewModel(application: Application, val repo: GoogleMapsRepo)
         get() = _theaterFeed
 
     fun getStores(location: String, radius: Int, type: String,
-                  key: String = API_KEY) {
+                  key: String = "API_KEY") {
 
         val dispatcher = Dispatchers.IO
 
