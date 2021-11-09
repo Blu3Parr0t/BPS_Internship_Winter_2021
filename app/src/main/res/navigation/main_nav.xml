@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_home_screen" >
         <action
             android:id="@+id/action_homeScreenFragment_to_searchResultsFragment"
-            app:destination="@id/searchResultsFragment" />
+            app:destination="@id/searchResultsFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeScreenFragment_to_houseFragment"
             app:destination="@id/houseFragment" />

@@ -38,6 +38,9 @@ class SearchResultsViewModel(
     private val _searchString = MutableLiveData<String>()
     val searchString: LiveData<String> = _searchString
 
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> = _isFavorite
+
 
     private val dispatcher = Dispatchers.IO
 
@@ -60,7 +63,12 @@ class SearchResultsViewModel(
                     _status.postValue(GOTApiStatus.ERROR)
                 }
             }
-            _searchString.postValue(app.applicationContext?.getString(R.string.search_text, name))
+            _searchString.postValue(
+                app.applicationContext?.getString(
+                    R.string.search_screen_subtitle,
+                    name
+                )
+            )
         }
     }
 
@@ -101,11 +109,18 @@ class SearchResultsViewModel(
 
     fun clickFavorite(character: GOTResponse) {
         viewModelScope.launch {
-            if (isFavorite(character)) {
+            checkFavorite(character)
+            if (_isFavorite.value == true) {
                 deleteFavorite(character)
             } else {
                 addFavorite(character)
             }
+        }
+    }
+
+    fun checkFavorite(character: GOTResponse) {
+        viewModelScope.launch {
+            _isFavorite.value = isFavorite(character)
         }
     }
 
@@ -132,3 +147,4 @@ class SearchResultsViewModel(
         }
     }
 }
+

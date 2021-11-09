@@ -12,4 +12,7 @@
     <color name="red_maroon">#7a1c23</color>
     <color name="darker_maroon">#3b1718</color>
     <color name="red_313">#c01313</color>
+    <color name="subtitle_background">#b31b1818</color>
+    <color name="transparent_background">#00FFFFFF</color>
+    <color name="search_field_background">#BF000000</color>
 </resources>
