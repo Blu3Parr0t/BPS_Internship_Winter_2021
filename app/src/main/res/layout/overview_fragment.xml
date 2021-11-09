@@ -42,9 +42,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/calisto_bold"
-                android:paddingTop="24dp"
-                android:paddingBottom="14dp"
-                android:text="Characters Name"
+                android:textColor="@color/black"
+                android:paddingTop="20dp"
+                android:paddingBottom="12dp"
+                android:text="@{viewModelOverview.passedCharacter.name}"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -64,22 +65,34 @@
 
             <TextView
                 android:id="@+id/character_title"
-                android:text="Characters Title"
+                style="@style/CharacterOverviewInfo"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{`Title: `+viewModelOverview.passedCharacter.titles.toString()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favorite_button"
-                style="@style/CharacterOverviewInfo" />
+                app:layout_constraintTop_toBottomOf="@id/favorite_button" />
 
             <TextView
                 android:id="@+id/character_house"
                 style="@style/CharacterOverviewInfo"
-                android:text="Characters Name"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{`House: `+viewModelOverview.passedCharacter.house}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/character_title" />
 
             <TextView
                 android:id="@+id/character_family"
                 style="@style/CharacterOverviewInfo"
-                android:text="Characters Name"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/family"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/character_house" />
 
