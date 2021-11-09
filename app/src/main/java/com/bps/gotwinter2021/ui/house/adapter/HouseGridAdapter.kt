@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.ItemCardViewBinding
 
-class HouseGridAdapter: ListAdapter<GOTResponse, HouseGridAdapter.CharacterByHouseViewHolder>(DiffCallback){
+class HouseGridAdapter(private val onClickListener: HousesFragmentOnClickListener): ListAdapter<GOTResponse, HouseGridAdapter.CharacterByHouseViewHolder>(DiffCallback){
     companion object DiffCallback : DiffUtil.ItemCallback<GOTResponse>() {
         override fun areItemsTheSame(oldItem: GOTResponse, newItem: GOTResponse): Boolean {
             return oldItem === newItem
@@ -20,9 +20,15 @@ class HouseGridAdapter: ListAdapter<GOTResponse, HouseGridAdapter.CharacterByHou
     }
 
     class CharacterByHouseViewHolder(private var binding: ItemCardViewBinding):RecyclerView.ViewHolder(binding.root) {
-        fun bind(character: GOTResponse){
+        fun bind(character: GOTResponse, clickListener: HousesFragmentOnClickListener){
             binding.character = character
             binding.cardItemViewNameTV.text = character.name
+            binding.cardItemViewFavoriteIV.setOnClickListener{
+                clickListener.onFavoriteClick(character, "favorite")
+            }
+            binding.cardItemViewCharacterIV.setOnClickListener{
+                clickListener.toOverviewClick(character, "navigate")
+            }
             binding.executePendingBindings()
         }
     }
@@ -33,6 +39,11 @@ class HouseGridAdapter: ListAdapter<GOTResponse, HouseGridAdapter.CharacterByHou
 
     override fun onBindViewHolder(holder: CharacterByHouseViewHolder, position: Int) {
         val character = getItem(position)
-        holder.bind(character)
+        holder.bind(character, onClickListener)
     }
+}
+
+class HousesFragmentOnClickListener(val clickListener: (character: GOTResponse, identifier: String) -> Unit){
+    fun onFavoriteClick(character: GOTResponse, identifier: String) = clickListener(character, identifier)
+    fun toOverviewClick(character: GOTResponse, identifier: String) = clickListener(character, identifier)
 }

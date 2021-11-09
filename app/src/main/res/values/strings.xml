@@ -15,4 +15,5 @@
     <string name="character_not_found">Character not found</string>
     <string name="maps_dialog_theater_string">Theater</string>
     <string name="maps_dialog_distance">%s mi</string>
+    <string name="family">Family</string>
 </resources>
