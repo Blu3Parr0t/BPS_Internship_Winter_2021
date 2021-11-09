@@ -42,6 +42,9 @@
         <argument
             android:name="searchString"
             app:argType="string" />
+        <action
+            android:id="@+id/action_searchResultsFragment_to_overviewFragment"
+            app:destination="@id/overviewFragment" />
     </fragment>
 
     <fragment

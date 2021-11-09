@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.ItemCardViewBinding
+import com.bps.gotwinter2021.ui.homescreen.adapter.HousesAdapter
 
-class CharacterAdapter :
+class CharacterAdapter(private val onClickListener: OnClickListener) :
     RecyclerView.Adapter<CharacterAdapter.CharactersByNameViewHolder>() {
 
     private var character: GOTResponse? = null
@@ -23,13 +24,19 @@ class CharacterAdapter :
     }
 
     override fun onBindViewHolder(holder: CharactersByNameViewHolder, position: Int) {
-        character?.let { holder.bindCharacter(it) }
+        character?.let { holder.bindCharacter(it, onClickListener) }
     }
 
     class CharactersByNameViewHolder(private var binding: ItemCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindCharacter(character: GOTResponse) {
+        fun bindCharacter(character: GOTResponse, clickListener: OnClickListener) {
             binding.character = character
+            binding.cardItemViewFavoriteIV.setOnClickListener{
+                clickListener.onClick(character, "favorite")
+            }
+            binding.cardItemViewCharacterIV.setOnClickListener{
+                clickListener.onFavoriteCLick(character, "navigate")
+            }
             binding.executePendingBindings()
         }
     }
@@ -47,5 +54,10 @@ class CharacterAdapter :
             size = 1
         }
         return size
+    }
+
+    class OnClickListener(val clickListener: (character: GOTResponse, identifier : String) -> Unit) {
+        fun onClick(character: GOTResponse, identifier : String) = clickListener(character, identifier )
+        fun onFavoriteCLick(character: GOTResponse, identifier : String) = clickListener(character, identifier )
     }
 }
