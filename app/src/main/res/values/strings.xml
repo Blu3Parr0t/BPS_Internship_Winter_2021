@@ -11,6 +11,8 @@
     <string name="favourites_title">FAVOURITES</string>
     <string name="favourites">FAVOURITES</string>
     <string name="favorite_button_overview_title">Favorite</string>
+    <string name="search_text">Search results for  \"" %s "\"</string>
+    <string name="character_not_found">Character not found</string>
     <string name="maps_dialog_theater_string">Theater</string>
     <string name="maps_dialog_distance">%s mi</string>
 </resources>

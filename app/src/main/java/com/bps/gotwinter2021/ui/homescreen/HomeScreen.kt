@@ -28,7 +28,7 @@ class HomeScreen : Fragment() {
         "Martell",
         "Tully",
         "Arryn",
-        "Tyrel"
+        "Tyrell"
     )
 
     override fun onCreateView(
