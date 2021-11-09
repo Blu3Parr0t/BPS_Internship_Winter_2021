@@ -16,7 +16,7 @@ interface FavoriteDatabaseDao {
 
     //find a specific character based on its name
     @Query("SELECT * from favorite_characters_table WHERE character_name = :key")
-    fun findCharacter(key: String) : Favorite
+    fun findCharacter(key: String) : Boolean
 
     //delete all from table
     @Query("DELETE FROM favorite_characters_table")

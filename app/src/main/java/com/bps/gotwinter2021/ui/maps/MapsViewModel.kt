@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.bps.gotwinter2021.common.secret.API.API_KEY
 import com.bps.gotwinter2021.data.model.GOTTheatre
 import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
-import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -8,6 +8,9 @@
         <variable
             name="character"
             type="com.bps.gotwinter2021.data.model.GOTResponse" />
+        <variable
+            name="clickListenerHouse"
+            type="com.bps.gotwinter2021.ui.house.adapter.HousesFragmentOnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

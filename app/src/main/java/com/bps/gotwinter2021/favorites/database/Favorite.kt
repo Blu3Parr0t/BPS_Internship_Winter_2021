@@ -6,16 +6,18 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_characters_table")
 data class Favorite(
-    //name, house, title, family memeber(list)
-        @PrimaryKey(autoGenerate = true)
-        var characterId: Long = 0L,
+    @PrimaryKey(autoGenerate = true)
+    var characterId: Long = 0L,
 
-        @ColumnInfo(name = "character_name")
-        var characterName: String = "",
+    @ColumnInfo(name = "character_name")
+    var characterName: String = "",
 
-        @ColumnInfo(name = "character_title")
-        var characterTitle: String = "",
+    @ColumnInfo(name = "character_title")
+    var characterTitle: String = "",
 
-        @ColumnInfo(name = "family_members")
-        var characterFamily: String = ""
+    @ColumnInfo(name = "family_members")
+    var characterFamily: String = "",
+
+    @ColumnInfo(name = "character_house")
+    var characterHouse: String = ""
 )
