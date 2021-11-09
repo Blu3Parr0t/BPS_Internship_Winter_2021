@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
@@ -31,7 +32,11 @@ class SearchResultsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val adapter = CharacterAdapter()
+        val adapter = CharacterAdapter(CharacterAdapter.OnClickListener {
+            it.let {
+                this.findNavController().navigate(SearchResultsFragmentDirections.actionSearchResultsFragmentToOverviewFragment(it))
+            }
+        })
         var search = SearchResultsFragmentArgs.fromBundle(requireArguments()).searchString.toLowerCase()
         search = viewModel.Capitalize(search)
 

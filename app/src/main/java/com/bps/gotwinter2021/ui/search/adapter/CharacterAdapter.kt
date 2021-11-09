@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.ItemCardViewBinding
+import com.bps.gotwinter2021.ui.homescreen.adapter.HousesAdapter
 
-class CharacterAdapter :
+class CharacterAdapter(private val onClickListener: OnClickListener) :
     RecyclerView.Adapter<CharacterAdapter.CharactersByNameViewHolder>() {
 
     private var character: GOTResponse? = null
@@ -23,6 +24,9 @@ class CharacterAdapter :
     }
 
     override fun onBindViewHolder(holder: CharactersByNameViewHolder, position: Int) {
+        holder.itemView.setOnClickListener {
+            character?.let { it -> onClickListener.onClick(it) }
+        }
         character?.let { holder.bindCharacter(it) }
     }
 
@@ -47,5 +51,9 @@ class CharacterAdapter :
             size = 1
         }
         return size
+    }
+
+    class OnClickListener(val clickListener: (character: GOTResponse) -> Unit) {
+        fun onClick(character: GOTResponse) = clickListener(character)
     }
 }

@@ -42,6 +42,9 @@
         <argument
             android:name="searchString"
             app:argType="string" />
+        <action
+            android:id="@+id/action_searchResultsFragment_to_overviewFragment"
+            app:destination="@id/overviewFragment" />
     </fragment>
 
     <fragment
@@ -51,5 +54,12 @@
         <argument
             android:name="houseName"
             app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/overviewFragment"
+        android:name="com.bps.gotwinter2021.ui.overview.OverviewFragment"
+        android:label="OverviewFragment" >
+        <argument android:name="character"
+            app:argType="com.bps.gotwinter2021.data.model.GOTResponse"/>
     </fragment>
 </navigation>
