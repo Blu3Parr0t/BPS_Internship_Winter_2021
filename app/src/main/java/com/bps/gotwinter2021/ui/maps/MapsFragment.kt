@@ -1,14 +1,14 @@
 package com.bps.gotwinter2021.ui.maps
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.location.Location
-import androidx.fragment.app.Fragment
-
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,28 +16,35 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.common.secret.API.API_KEY
-import com.bps.gotwinter2021.data.network.repo.GOTRepo
+import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
+import com.bps.gotwinter2021.databinding.FragmentMapsBinding
+import com.bps.gotwinter2021.databinding.FragmentMapsBottomSheetDialogBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import jp.wasabeef.blurry.Blurry
 import timber.log.Timber
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-class MapsFragment : Fragment() {
-
-    private val REQUEST_LOCATION_PERMISSION = 1
+class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
+
+    private lateinit var mapView: MapView
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -53,11 +60,13 @@ class MapsFragment : Fragment() {
 
     private var lastMarker: Marker? = null
 
+    private lateinit var binding: FragmentMapsBinding
+
     private val viewModel: MapsViewModel by lazy {
         createViewModel {
             MapsViewModel(
                 application = this.requireActivity().application,
-                GOTRepo.provideGOTRepo()
+                GoogleMapsRepo.provideGoogleMapsRepo()
             )
         }
     }
@@ -65,11 +74,12 @@ class MapsFragment : Fragment() {
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
 
-            if (isGranted) { // Do something if permission granted
+            if (isGranted) {
                 Timber.d("Permission granted by the user")
                 enableMyLocation()
+                binding.mapsFragmentBackgroundIv.visibility = View.INVISIBLE
             }
-            else { // Do something as the permission is not granted
+            else {
                 Timber.d("Permission denied by the user")
                 view?.findNavController()?.navigate(
                     MapsFragmentDirections.actionMapsFragmentToHomeScreenFragment()
@@ -77,35 +87,15 @@ class MapsFragment : Fragment() {
             }
         }
 
-    private val callback = OnMapReadyCallback {
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-
-        googleMap = it
-
-        googleMap.uiSettings.isZoomControlsEnabled = true
-
-        setMapStyle(googleMap)
-
-        googleMap.setOnMarkerClickListener { marker ->
-            onMarkerClick(marker)
-        }
-
-        enableMyLocation()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
+        binding = FragmentMapsBinding.inflate(inflater)
+
+        val v = binding.root
 
         val bitmap = BitmapFactory.decodeResource(
             context?.resources, R.drawable.got_theater_icon)
@@ -124,19 +114,13 @@ class MapsFragment : Fragment() {
         fusedLocationClient = LocationServices
             .getFusedLocationProviderClient(this.requireActivity())
 
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED) {
-            requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        else{
-            Timber.d("Permissions already granted.")
-        }
-
         Places.initialize(this.requireContext(), API_KEY)
 
         placesClient = Places.createClient(this.requireContext())
+
+        mapView = v.findViewById(R.id.map) as MapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
 
         viewModel.theaterFeed.observe(viewLifecycleOwner, {
             it?.results?.forEach { theater ->
@@ -159,14 +143,50 @@ class MapsFragment : Fragment() {
             }
         })
 
-        return inflater.inflate(R.layout.fragment_maps, container, false)
+        return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            Timber.d("Getting permissions")
+        }
+        else{
+            Timber.d("Permissions already granted.")
+        }
     }
+
+    override fun onMapReady(it: GoogleMap) {
+
+        if(!isPermissionGranted())
+        {
+            binding.mapsFragmentBackgroundIv.visibility = View.VISIBLE
+            Blurry.with(requireContext())
+                .radius(3)
+                .sampling(8)
+                .async()
+                .capture(binding.mapsFragmentBackgroundIv)
+                .into(binding.mapsFragmentBackgroundIv)
+        }
+
+        googleMap = it
+
+        googleMap.uiSettings.isZoomControlsEnabled = true
+
+        setMapStyle(googleMap)
+
+        googleMap.setOnMarkerClickListener { marker ->
+            onMarkerClick(marker)
+        }
+
+        enableMyLocation()
+
+    }
+
+
 
     private fun getAddress(lat: LatLng): String? {
         val geocoder = Geocoder(this.requireContext())
@@ -182,8 +202,9 @@ class MapsFragment : Fragment() {
         distanceLocation.longitude = marker.position.longitude
         distanceLocation.latitude = marker.position.latitude
 
-        val distance = lastLocation.distanceTo(distanceLocation) / 1000
-        Timber.d("Distance is: " + distance)
+        val distance = BigDecimal(0.62*(lastLocation.distanceTo(distanceLocation) / 1000))
+            .setScale(2, RoundingMode.HALF_EVEN)
+        Timber.d("Distance is: $distance")
 
 
         if (clickCount == false) {
@@ -195,6 +216,29 @@ class MapsFragment : Fragment() {
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(gotSelectIcon))
             marker.tag = true
         }
+
+        val bindingSheet = DataBindingUtil.inflate<FragmentMapsBottomSheetDialogBinding>(
+            layoutInflater,
+            R.layout.fragment_maps_bottom_sheet_dialog,
+            null,
+            false
+        )
+
+        bindingSheet.mapsDialogNameTv.text = marker.title
+        bindingSheet.mapsDialogAddressTv.text = marker.snippet
+        bindingSheet.mapsDialogDistanceTv.text = getString(R.string.maps_dialog_distance, distance)
+        bindingSheet.mapsDialogDirectionsButton.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+            Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${marker.snippet}"))
+            startActivity(intent)
+        }
+
+        val dialog = BottomSheetDialog(this.requireContext())
+        dialog.setContentView(bindingSheet.root)
+        dialog.show()
+
+
         return true
     }
 
@@ -216,6 +260,7 @@ class MapsFragment : Fragment() {
             ) {
                 Timber.d("Case test")
             }
+
             googleMap.isMyLocationEnabled = true
 
             fusedLocationClient.lastLocation.addOnSuccessListener(this.requireActivity()) { location ->
@@ -251,4 +296,35 @@ class MapsFragment : Fragment() {
             Timber.d("Cant find style. Error: ", e)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
 }

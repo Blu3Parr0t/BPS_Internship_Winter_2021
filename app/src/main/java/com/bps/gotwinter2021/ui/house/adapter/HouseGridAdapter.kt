@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bps.gotwinter2021.data.model.GOTResponse
-import com.bps.gotwinter2021.databinding.CardItemViewBinding
+import com.bps.gotwinter2021.databinding.ItemCardViewBinding
 
 class HouseGridAdapter(private val onClickListener: HousesFragmentOnClickListener): ListAdapter<GOTResponse, HouseGridAdapter.CharacterByHouseViewHolder>(DiffCallback){
     companion object DiffCallback : DiffUtil.ItemCallback<GOTResponse>() {
@@ -19,7 +19,7 @@ class HouseGridAdapter(private val onClickListener: HousesFragmentOnClickListene
         }
     }
 
-    class CharacterByHouseViewHolder(private var binding: CardItemViewBinding):RecyclerView.ViewHolder(binding.root) {
+    class CharacterByHouseViewHolder(private var binding: ItemCardViewBinding):RecyclerView.ViewHolder(binding.root) {
         fun bind(character: GOTResponse, clickListener: HousesFragmentOnClickListener){
             binding.character = character
             binding.cardItemViewNameTV.text = character.name
@@ -34,7 +34,7 @@ class HouseGridAdapter(private val onClickListener: HousesFragmentOnClickListene
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterByHouseViewHolder {
-        return CharacterByHouseViewHolder(CardItemViewBinding.inflate(LayoutInflater.from(parent.context)))
+        return CharacterByHouseViewHolder(ItemCardViewBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
     override fun onBindViewHolder(holder: CharacterByHouseViewHolder, position: Int) {

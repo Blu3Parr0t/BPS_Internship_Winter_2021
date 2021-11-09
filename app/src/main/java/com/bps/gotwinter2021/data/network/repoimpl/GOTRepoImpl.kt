@@ -15,11 +15,6 @@ class GOTRepoImpl(): GOTRepo {
         "https://api.got.show/"
     )
 
-    val retroTheatreObject = RetrofitFactory.retrofitProvider(
-        GOTApiEndPoint::class.java,
-        "https://maps.googleapis.com/"
-    )
-
     override suspend fun fetchCharactersByHouse(
         viewModelDispatcher: CoroutineDispatcher,
         house: String
@@ -41,24 +36,6 @@ class GOTRepoImpl(): GOTRepo {
         return  withContext(viewmodelDispatcher){
             val dataResponse = retroObject.fetchCharactersByName(name = name)
             if (dataResponse.isSuccessful) {
-                ServiceResult.Succes(dataResponse.body())
-            } else {
-                ServiceResult.Error(Exception(dataResponse.errorBody().toString()))
-            }
-        }
-    }
-
-    override suspend fun fetchTheaters(
-        viewModelDispatcher: CoroutineDispatcher,
-        location: String,
-        radius: Int,
-        type: String,
-        key: String
-    ): ServiceResult<GOTTheatre?> {
-        return withContext(viewModelDispatcher) {
-            val dataResponse = retroTheatreObject.getStores(location = location, radius = radius, type = type, key = key)
-
-            if(dataResponse.isSuccessful) {
                 ServiceResult.Succes(dataResponse.body())
             } else {
                 ServiceResult.Error(Exception(dataResponse.errorBody().toString()))
