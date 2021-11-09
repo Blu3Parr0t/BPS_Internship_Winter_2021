@@ -66,11 +66,4 @@
             android:name="characterPassed"
             app:argType="com.bps.gotwinter2021.data.model.GOTResponse"/>
     </fragment>
-    <fragment
-        android:id="@+id/overviewFragment"
-        android:name="com.bps.gotwinter2021.ui.overview.OverviewFragment"
-        android:label="OverviewFragment" >
-        <argument android:name="character"
-            app:argType="com.bps.gotwinter2021.data.model.GOTResponse"/>
-    </fragment>
 </navigation>
