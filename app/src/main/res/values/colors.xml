@@ -10,4 +10,6 @@
     <color name="yellow_bright">#FBCD1F</color>
     <color name="purple_900">#1F1F39</color>
     <color name="red_maroon">#7a1c23</color>
+    <color name="darker_maroon">#3b1718</color>
+    <color name="red_313">#c01313</color>
 </resources>

@@ -1,12 +1,14 @@
 package com.bps.gotwinter2021.ui.maps
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,14 +16,15 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.common.secret.API.API_KEY
-import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
 import com.bps.gotwinter2021.databinding.FragmentMapsBinding
+import com.bps.gotwinter2021.databinding.FragmentMapsBottomSheetDialogBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -31,12 +34,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import jp.wasabeef.blurry.Blurry
 import timber.log.Timber
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
-
-    private val REQUEST_LOCATION_PERMISSION = 1
 
     private lateinit var googleMap: GoogleMap
 
@@ -87,7 +91,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentMapsBinding.inflate(inflater)
 
@@ -198,7 +202,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         distanceLocation.longitude = marker.position.longitude
         distanceLocation.latitude = marker.position.latitude
 
-        val distance = lastLocation.distanceTo(distanceLocation) / 1000
+        val distance = BigDecimal(0.62*(lastLocation.distanceTo(distanceLocation) / 1000))
+            .setScale(2, RoundingMode.HALF_EVEN)
         Timber.d("Distance is: $distance")
 
 
@@ -211,6 +216,29 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(gotSelectIcon))
             marker.tag = true
         }
+
+        val bindingSheet = DataBindingUtil.inflate<FragmentMapsBottomSheetDialogBinding>(
+            layoutInflater,
+            R.layout.fragment_maps_bottom_sheet_dialog,
+            null,
+            false
+        )
+
+        bindingSheet.mapsDialogNameTv.text = marker.title
+        bindingSheet.mapsDialogAddressTv.text = marker.snippet
+        bindingSheet.mapsDialogDistanceTv.text = getString(R.string.maps_dialog_distance, distance)
+        bindingSheet.mapsDialogDirectionsButton.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+            Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${marker.snippet}"))
+            startActivity(intent)
+        }
+
+        val dialog = BottomSheetDialog(this.requireContext())
+        dialog.setContentView(bindingSheet.root)
+        dialog.show()
+
+
         return true
     }
 
@@ -271,32 +299,32 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        mapView?.onResume()
+        mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView?.onPause()
+        mapView.onPause()
     }
 
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView?.onStop()
+        mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView?.onDestroy()
+        mapView.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView?.onLowMemory()
+        mapView.onLowMemory()
     }
 
 }
