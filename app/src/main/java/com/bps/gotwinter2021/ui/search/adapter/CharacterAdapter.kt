@@ -24,16 +24,19 @@ class CharacterAdapter(private val onClickListener: OnClickListener) :
     }
 
     override fun onBindViewHolder(holder: CharactersByNameViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            character?.let { it -> onClickListener.onClick(it) }
-        }
-        character?.let { holder.bindCharacter(it) }
+        character?.let { holder.bindCharacter(it, onClickListener) }
     }
 
     class CharactersByNameViewHolder(private var binding: ItemCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindCharacter(character: GOTResponse) {
+        fun bindCharacter(character: GOTResponse, clickListener: OnClickListener) {
             binding.character = character
+            binding.cardItemViewFavoriteIV.setOnClickListener{
+                clickListener.onClick(character, "favorite")
+            }
+            binding.cardItemViewCharacterIV.setOnClickListener{
+                clickListener.onFavoriteCLick(character, "navigate")
+            }
             binding.executePendingBindings()
         }
     }
@@ -53,7 +56,8 @@ class CharacterAdapter(private val onClickListener: OnClickListener) :
         return size
     }
 
-    class OnClickListener(val clickListener: (character: GOTResponse) -> Unit) {
-        fun onClick(character: GOTResponse) = clickListener(character)
+    class OnClickListener(val clickListener: (character: GOTResponse, identifier : String) -> Unit) {
+        fun onClick(character: GOTResponse, identifier : String) = clickListener(character, identifier )
+        fun onFavoriteCLick(character: GOTResponse, identifier : String) = clickListener(character, identifier )
     }
 }

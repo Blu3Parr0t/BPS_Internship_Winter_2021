@@ -10,13 +10,18 @@ import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
+import com.bps.gotwinter2021.favorites.database.Favorite
+import com.bps.gotwinter2021.favorites.database.FavoriteDatabaseDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class SearchResultsViewModel(val repo: GOTRepo, val app: Application): ViewModel() {
+class SearchResultsViewModel(
+    val app: Application, val database: FavoriteDatabaseDao, val repo: GOTRepo
+) : ViewModel() {
 
-    enum class  GOTApiStatus { LOADING, ERROR, DONE }
+    enum class GOTApiStatus { LOADING, ERROR, DONE }
 
     private val _searchText = MutableLiveData<String?>()
     val searchText: LiveData<String?> = _searchText
@@ -36,15 +41,18 @@ class SearchResultsViewModel(val repo: GOTRepo, val app: Application): ViewModel
 
     private val dispatcher = Dispatchers.IO
 
-    fun fetchCharactersByName(name: String){
+    fun fetchCharactersByName(name: String) {
         viewModelScope.launch(dispatcher) {
-            when( val response = repo.fetchCharacterByName(dispatcher,name = name)){
+            when (val response = repo.fetchCharacterByName(dispatcher, name = name)) {
                 is ServiceResult.Succes -> {
                     _characters.postValue(response.data)
                     _status.postValue(GOTApiStatus.DONE)
                 }
                 is ServiceResult.Error -> {
-                    Timber.d("Error was found when calling GOT characters :: " + response.exception)
+                    Timber.d(
+                        "Error was found when calling GOT characters :: "
+                                + response.exception
+                    )
                     _status.postValue(GOTApiStatus.ERROR)
                 }
                 else -> {
@@ -63,13 +71,16 @@ class SearchResultsViewModel(val repo: GOTRepo, val app: Application): ViewModel
     fun searchButton() {
         _status.value = GOTApiStatus.LOADING
         val length = _searchText.value?.length ?: 0
-        if (length > 0){
+        if (length > 0) {
             fetchCharactersByName(
                 Capitalize(_searchText.value.toString())
             )
-        }
-        else{
-            Toast.makeText(app.applicationContext,"type what you want to search for", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                app.applicationContext,
+                "type what you want to search for",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -79,12 +90,45 @@ class SearchResultsViewModel(val repo: GOTRepo, val app: Application): ViewModel
 
         var output = ""
 
-        for(word in words){
-            output += word.capitalize() +" "
+        for (word in words) {
+            output += word.capitalize() + " "
         }
 
         output = output.trim()
 
         return output
+    }
+
+    fun clickFavorite(character: GOTResponse) {
+        viewModelScope.launch {
+            if (isFavorite(character)) {
+                deleteFavorite(character)
+            } else {
+                addFavorite(character)
+            }
+        }
+    }
+
+    private suspend fun addFavorite(character: GOTResponse) {
+        withContext(Dispatchers.IO) {
+            val addCharacter = Favorite()
+            addCharacter.characterName = character.name
+            addCharacter.characterHouse = character.house
+            addCharacter.characterTitle = character.titles[0]
+            addCharacter.characterFamily = character.father + character.mother
+            database.insert(addCharacter)
+        }
+    }
+
+    private suspend fun deleteFavorite(character: GOTResponse) {
+        withContext(Dispatchers.IO) {
+            database.clearOne(character.name)
+        }
+    }
+
+    private suspend fun isFavorite(character: GOTResponse): Boolean {
+        return withContext(Dispatchers.IO) {
+            database.findCharacter(character.name)
+        }
     }
 }

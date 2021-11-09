@@ -1,8 +1,6 @@
 package com.bps.gotwinter2021.ui.search
 
 import android.os.Bundle
-import android.text.TextUtils.split
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +11,10 @@ import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.databinding.FragmentSearchResultsBinding
+import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
 import com.bps.gotwinter2021.ui.search.adapter.CharacterAdapter
 
 class SearchResultsFragment : Fragment() {
-
-    val viewModel: SearchResultsViewModel by lazy {
-        createViewModel {
-            SearchResultsViewModel(
-                GOTRepo.provideGOTRepo(),
-                requireActivity().application
-            )
-        }
-    }
 
     private lateinit var binding: FragmentSearchResultsBinding
 
@@ -32,16 +22,36 @@ class SearchResultsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val adapter = CharacterAdapter(CharacterAdapter.OnClickListener {
-            it.let {
-                this.findNavController().navigate(SearchResultsFragmentDirections.actionSearchResultsFragmentToOverviewFragment(it))
+        val application = requireNotNull(this.activity).application
+        val database = FavoriteDatabase.getInstance(application).favoriteDatabaseDao
+
+        val viewModel: SearchResultsViewModel by lazy {
+            createViewModel {
+                SearchResultsViewModel(
+                    application, database, GOTRepo.provideGOTRepo()
+                )
+            }
+        }
+
+        val adapter = CharacterAdapter(CharacterAdapter.OnClickListener { character, identifier ->
+            if (identifier == "navigate") {
+                this.findNavController().navigate(
+                    SearchResultsFragmentDirections.actionSearchResultsFragmentToOverviewFragment(
+                        character
+                    )
+                )
+            } else {
+                viewModel.clickFavorite(character)
             }
         })
-        var search = SearchResultsFragmentArgs.fromBundle(requireArguments()).searchString.toLowerCase()
+        var search =
+            SearchResultsFragmentArgs.fromBundle(requireArguments()).searchString.toLowerCase()
         search = viewModel.Capitalize(search)
 
         binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_search_results, container, false)
+            DataBindingUtil.inflate(
+                inflater, R.layout.fragment_search_results, container, false
+            )
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.searchResultsRV.adapter = adapter
