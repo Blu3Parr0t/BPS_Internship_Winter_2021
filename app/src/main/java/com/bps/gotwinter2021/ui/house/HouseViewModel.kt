@@ -24,7 +24,6 @@ class HouseViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val _characterFromHouse = MutableLiveData<List<GOTResponse?>?>()
     val characterFromHouse: LiveData<List<GOTResponse?>?> = _characterFromHouse
-
     private val dispatcher = Dispatchers.IO
 
     private var fav = MutableLiveData<Favorite?>()
@@ -61,6 +60,7 @@ class HouseViewModel(
                 val newFav = Favorite()
                 newFav.characterName = oldResponse.name
                 newFav.characterTitle = oldResponse.titles[0]
+                newFav.characterImage = oldResponse.image
                 newFav.characterHouse = oldResponse.house
                 newFav.characterFamily = oldResponse.father +", " + oldResponse.mother
                 insert(newFav)

@@ -41,10 +41,9 @@ class FavoritesFragment : Fragment() {
 
         viewModel.navigateOverview.observe(viewLifecycleOwner, Observer{
             val arrayTitles: List<String> = it.characterTitle.split(",").map {it.trim()}
-            val newOver = GOTResponse(id = "", name = it.characterName, image = "", house = it.characterHouse, titles = arrayTitles, father = it.characterFamily!!, mother = "")
+            val newOver = GOTResponse(id = "", name = it.characterName, image = it.characterImage, house = it.characterHouse, titles = arrayTitles, father = it.characterFamily!!, mother = "")
             this.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToOverviewFragment(newOver))
         })
-
         return binding.root
     }
 }

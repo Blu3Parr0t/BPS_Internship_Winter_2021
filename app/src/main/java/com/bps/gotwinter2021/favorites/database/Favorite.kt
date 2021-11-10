@@ -12,6 +12,9 @@ data class Favorite(
     @ColumnInfo(name = "character_name")
     var characterName: String = "",
 
+    @ColumnInfo(name = "character_image")
+    var characterImage: String = "",
+
     @ColumnInfo(name = "character_title")
     var characterTitle: String = "",
 
