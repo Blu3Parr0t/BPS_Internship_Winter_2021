@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="CharacterOverviewInfo">
+    <style name="character_overview_info">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/calisto_reg</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">14dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
         <item name="android:textColor">@color/black</item>
     </style>
 

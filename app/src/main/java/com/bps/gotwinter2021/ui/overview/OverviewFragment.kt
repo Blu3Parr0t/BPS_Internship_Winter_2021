@@ -2,17 +2,17 @@ package com.bps.gotwinter2021.ui.overview
 
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.common.createViewModel
+import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.OverviewFragmentBinding
 import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
 
 class OverviewFragment : Fragment() {
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = OverviewFragmentBinding.inflate(inflater)
         binding.setLifecycleOwner(this)
@@ -23,14 +23,31 @@ class OverviewFragment : Fragment() {
         val viewModel: OverviewViewModel by lazy{
             createViewModel {
                 OverviewViewModel(requireActivity().application,
-                    dataSource, passedCharacter
+                    dataSource,
+                    passedCharacter
                 )
             }
         }
         binding.viewModelOverview = viewModel
+        determineFamily(passedCharacter, binding)
+        setInfo(passedCharacter, binding)
+
+        return binding.root
+    }
+
+    private fun setInfo(passedCharacter: GOTResponse, binding: OverviewFragmentBinding) {
+        if(passedCharacter.titles.size > 0) {
+            val title: String = "<b> Title: </b>" + passedCharacter.titles[0]
+            binding.characterTitle.text = Html.fromHtml(title)
+        }
+        val house: String = "<b> House: </b>" + passedCharacter.house
+        binding.characterHouse.text = Html.fromHtml(house)
+    }
+
+    private fun determineFamily(passedCharacter: GOTResponse, binding: OverviewFragmentBinding) {
         if(passedCharacter.father.isNullOrEmpty() && passedCharacter.mother.isNullOrEmpty())
         {
-            binding.characterFamily.text = "empty"
+            binding.characterFamily.text = " "
         }
         else if(passedCharacter.father.isNullOrEmpty() && !passedCharacter.mother.isNullOrEmpty()){
             val justM: String = "<b> Family: </b>" + passedCharacter.mother
@@ -44,7 +61,5 @@ class OverviewFragment : Fragment() {
             val family: String = "<b> Family: </b>" + passedCharacter.father +", " + passedCharacter.mother
             binding.characterFamily.text = Html.fromHtml(family)
         }
-
-        return binding.root
     }
 }

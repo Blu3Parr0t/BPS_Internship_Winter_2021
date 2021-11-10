@@ -47,6 +47,7 @@ class OverviewViewModel(
                 val newFav = Favorite()
                 newFav.characterName = oldResponse.name
                 newFav.characterTitle = oldResponse.titles[0]
+                newFav.characterImage = oldResponse.image
                 newFav.characterHouse = oldResponse.house
                 newFav.characterFamily = oldResponse.father +", " + oldResponse.mother
                 insert(newFav)
