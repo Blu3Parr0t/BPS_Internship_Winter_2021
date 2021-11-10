@@ -32,7 +32,11 @@
         android:id="@+id/favoritesFragment"
         android:name="com.bps.gotwinter2021.ui.favorites.FavoritesFragment"
         android:label="favorites_fragment"
-        tools:layout="@layout/favorites_fragment" />
+        tools:layout="@layout/favorites_fragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_overviewFragment"
+            app:destination="@id/overviewFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchResultsFragment"

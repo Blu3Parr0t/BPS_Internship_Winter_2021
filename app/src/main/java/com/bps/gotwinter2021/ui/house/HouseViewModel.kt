@@ -28,8 +28,6 @@ class HouseViewModel(
     private val dispatcher = Dispatchers.IO
 
     private var fav = MutableLiveData<Favorite?>()
-    private val favs = dataSource.getAllCharacters()
-
     private val _navigateOverview = MutableLiveData<GOTResponse>()
     val navigateOverview: LiveData<GOTResponse>
     get() = _navigateOverview
@@ -62,9 +60,9 @@ class HouseViewModel(
             }else {
                 val newFav = Favorite()
                 newFav.characterName = oldResponse.name
-                newFav.characterTitle = ""
+                newFav.characterTitle = oldResponse.titles[0]
                 newFav.characterHouse = oldResponse.house
-                newFav.characterFamily = ""
+                newFav.characterFamily = oldResponse.father +", " + oldResponse.mother
                 insert(newFav)
             }
         }
