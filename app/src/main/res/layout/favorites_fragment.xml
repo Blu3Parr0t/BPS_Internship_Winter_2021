@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="favoritesViewModel"
             type="com.bps.gotwinter2021.ui.favorites.FavoritesViewModel" />
+        <variable
+            name="favorite"
+            type="com.bps.gotwinter2021.data.model.GOTResponse" />
     </data>
 
     <LinearLayout
@@ -46,12 +48,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favorites_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
             tools:listitem="@layout/houses_card_view"
-            tools:itemCount="4"/>
+            tools:itemCount="4"
+            app:favoriteCharacters="@{favoritesViewModel.favs}"/>
 
     </LinearLayout>
 </layout>
