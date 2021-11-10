@@ -60,10 +60,10 @@ class HomeScreen : Fragment() {
                         viewModel.searchText.value!!
                     )
                 )
+                binding.homeScreenSearchET.text = null
                 viewModel.doneNavigation()
             }
         })
         return binding.root
     }
-
 }

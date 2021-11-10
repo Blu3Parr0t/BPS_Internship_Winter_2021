@@ -17,6 +17,17 @@
         android:background="@drawable/chair"
         tools:context=".ui.search.SearchResultsFragment">
 
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/search_results_title_TV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_arrow" />
+
         <TextView
             android:id="@+id/search_results_title_TV"
             android:layout_width="wrap_content"
@@ -59,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:background="#00FFFFFF"
+            android:background="@color/transparent_background"
             android:onClick="@{() -> viewModel.searchButton()}"
             android:text="@string/home_screen_search_button"
             android:textColor="@color/yellow_bright"
@@ -77,7 +88,7 @@
                 android:id="@+id/search_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#BF1b1818"
+                android:background="@color/subtitle_background"
                 android:fontFamily="@font/calisto_bold"
                 android:padding="6dp"
                 android:paddingStart="20dp"

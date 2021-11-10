@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.bps.gotwinter2021.ui.homescreen.HomeScreenViewModel" />
@@ -16,7 +15,6 @@
         android:background="@drawable/chair"
         tools:context=".ui.homescreen.HomeScreen">
 
-        <!-- TODO: Update blank fragment layout -->
         <TextView
             android:id="@+id/home_screen_title_TV"
             android:layout_width="wrap_content"
@@ -68,17 +66,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/home_screen_search_ET" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/subtitle_background"
+            android:padding="16dp"
+            android:text="@string/home_screen_subtitle"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_screen_search_ET" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/home_screen_RV"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/home_screen_search_ET"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
             app:spanCount="4"
-            tools:listitem="@layout/houses_card_view"/>
+            tools:listitem="@layout/houses_card_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

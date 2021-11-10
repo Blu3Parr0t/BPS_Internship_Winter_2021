@@ -18,6 +18,8 @@ class SearchResultsFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchResultsBinding
 
+    private var characterPosition: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,13 +57,21 @@ class SearchResultsFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.searchResultsRV.adapter = adapter
+        binding.backArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         viewModel.fetchCharactersByName(search)
-        viewModel.characters.observe(viewLifecycleOwner, {
-            adapter.setData(it)
-        })
         viewModel.searchString.observe(viewLifecycleOwner, {
             binding.searchText.text = it
+        })
+        viewModel.isFavorite.observe(viewLifecycleOwner, {
+            adapter.setData(viewModel.characters.value,it)
+        })
+        viewModel.characters.observe(viewLifecycleOwner, {
+            if (it != null) {
+                viewModel.checkFavorite(it)
+            }
         })
         viewModel.status.observe(viewLifecycleOwner, {
             when (it) {

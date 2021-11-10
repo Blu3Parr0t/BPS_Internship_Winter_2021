@@ -11,9 +11,10 @@
     <string name="favourites_title">FAVOURITES</string>
     <string name="favourites">FAVOURITES</string>
     <string name="favorite_button_overview_title">Favorite</string>
-    <string name="search_text">Search results for  \"" %s "\"</string>
+    <string name="search_screen_subtitle">Search results for  \"" %s "\"</string>
     <string name="character_not_found">Character not found</string>
     <string name="maps_dialog_theater_string">Theater</string>
     <string name="maps_dialog_distance">%s mi</string>
     <string name="family">Family</string>
+    <string name="home_screen_subtitle">Learn more about the characters in HBO’s most renouned and heavily awarded series, Game of Thrones.</string>
 </resources>
