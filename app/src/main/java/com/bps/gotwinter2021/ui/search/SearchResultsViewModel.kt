@@ -1,6 +1,7 @@
 package com.bps.gotwinter2021.ui.search
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,14 +12,20 @@ import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.favorites.database.Favorite
+import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
 import com.bps.gotwinter2021.favorites.database.FavoriteDatabaseDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
-class SearchResultsViewModel(
-    val app: Application, val database: FavoriteDatabaseDao, val repo: GOTRepo
+@HiltViewModel
+class SearchResultsViewModel @Inject constructor(
+    private val app: Application,
+    private val GOTRepo: GOTRepo,
+    private val GOTDBDao: FavoriteDatabaseDao
 ) : ViewModel() {
 
     enum class GOTApiStatus { LOADING, ERROR, DONE }
@@ -46,7 +53,7 @@ class SearchResultsViewModel(
 
     fun fetchCharactersByName(name: String) {
         viewModelScope.launch(dispatcher) {
-            when (val response = repo.fetchCharacterByName(dispatcher, name = name)) {
+            when (val response = GOTRepo.fetchCharacterByName(name = name)) {
                 is ServiceResult.Succes -> {
                     _characters.postValue(response.data)
                     _status.postValue(GOTApiStatus.DONE)
@@ -131,19 +138,20 @@ class SearchResultsViewModel(
             addCharacter.characterHouse = character.house
             addCharacter.characterTitle = character.titles[0]
             addCharacter.characterFamily = character.father + character.mother
-            database.insert(addCharacter)
+            addCharacter.characterImage = character.image
+            GOTDBDao.insert(addCharacter)
         }
     }
 
     private suspend fun deleteFavorite(character: GOTResponse) {
         withContext(Dispatchers.IO) {
-            database.clearOne(character.name)
+            GOTDBDao.clearOne(character.name)
         }
     }
 
     private suspend fun isFavorite(character: GOTResponse): Boolean {
         return withContext(Dispatchers.IO) {
-            database.findCharacter(character.name)
+            GOTDBDao.findCharacter(character.name)
         }
     }
 }

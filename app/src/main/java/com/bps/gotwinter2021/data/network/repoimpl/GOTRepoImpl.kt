@@ -7,33 +7,34 @@ import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.data.network.retrofit.RetrofitFactory
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
+import javax.inject.Inject
 
-class GOTRepoImpl(): GOTRepo {
-    val retroObject = RetrofitFactory.retrofitProvider(
-        GOTApiEndPoint::class.java,
-        "https://api.got.show/"
-    )
+class GOTRepoImpl @Inject constructor(
+    private val dispatcher: Dispatchers,
+    private val retroObject: GOTApiEndPoint
+) : GOTRepo {
 
     override suspend fun fetchCharactersByHouse(
         viewModelDispatcher: CoroutineDispatcher,
         house: String
     ): ServiceResult<List<GOTResponse?>?> {
-        return withContext(viewModelDispatcher){
+        return withContext(viewModelDispatcher) {
             val dataResponse = retroObject.fetchCharactersByHouse(house = house)
-            if(dataResponse.isSuccessful){
+            if (dataResponse.isSuccessful) {
                 ServiceResult.Succes(dataResponse.body())
-            } else{
+            } else {
                 ServiceResult.Error(Exception(dataResponse.errorBody().toString()))
             }
         }
     }
 
     override suspend fun fetchCharacterByName(
-        viewmodelDispatcher: CoroutineDispatcher,
         name: String
     ): ServiceResult<GOTResponse?> {
-        return  withContext(viewmodelDispatcher){
+        return withContext(dispatcher.IO) {
             val dataResponse = retroObject.fetchCharactersByName(name = name)
             if (dataResponse.isSuccessful) {
                 ServiceResult.Succes(dataResponse.body())
