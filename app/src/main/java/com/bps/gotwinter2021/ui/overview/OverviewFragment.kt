@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.OverviewFragmentBinding
@@ -15,7 +16,6 @@ import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
 class OverviewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = OverviewFragmentBinding.inflate(inflater)
-        binding.setLifecycleOwner(this)
         val passedCharacter = OverviewFragmentArgs.fromBundle(requireArguments()).characterPassed
         val application = requireNotNull(activity).application
         val dataSource = FavoriteDatabase.getInstance(application).favoriteDatabaseDao
@@ -28,7 +28,14 @@ class OverviewFragment : Fragment() {
                 )
             }
         }
+
+        binding.lifecycleOwner = this
         binding.viewModelOverview = viewModel
+        binding.backArrow2.setOnClickListener {
+            Log.d("JJJ","It was Pressed: ${findNavController().popBackStack()}")
+            findNavController().popBackStack()
+        }
+
         determineFamily(passedCharacter, binding)
         setInfo(passedCharacter, binding)
 
@@ -45,8 +52,7 @@ class OverviewFragment : Fragment() {
     }
 
     private fun determineFamily(passedCharacter: GOTResponse, binding: OverviewFragmentBinding) {
-        if(passedCharacter.father.isNullOrEmpty() && passedCharacter.mother.isNullOrEmpty())
-        {
+        if(passedCharacter.father.isNullOrEmpty() && passedCharacter.mother.isNullOrEmpty()) {
             binding.characterFamily.text = " "
         }
         else if(passedCharacter.father.isNullOrEmpty() && !passedCharacter.mother.isNullOrEmpty()){
