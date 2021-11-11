@@ -49,7 +49,17 @@ class OverviewViewModel(
                 newFav.characterTitle = oldResponse.titles[0]
                 newFav.characterImage = oldResponse.image
                 newFav.characterHouse = oldResponse.house
-                newFav.characterFamily = oldResponse.father +", " + oldResponse.mother
+                if(oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()){
+                    newFav.characterFamily = " "
+                }
+                else if(!oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()){
+                    newFav.characterFamily = oldResponse.father
+                }
+                else if(oldResponse.father.isNullOrEmpty() && !oldResponse.mother.isNullOrEmpty()){
+                    newFav.characterFamily = oldResponse.mother
+                }
+                else{
+                    newFav.characterFamily = oldResponse.father +", " + oldResponse.mother}
                 insert(newFav)
             }
         }

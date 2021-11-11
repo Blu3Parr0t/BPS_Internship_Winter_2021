@@ -1,7 +1,6 @@
 package com.bps.gotwinter2021.ui.house
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,14 +18,21 @@ class HouseViewModel(
     val repo: GOTRepo,
     val dataSource: FavoriteDatabaseDao
 ) : ViewModel() {
+    enum class GOTApiStatus { LOADING, ERROR, DONE }
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    private val _status = MutableLiveData<HouseViewModel.GOTApiStatus>()
+    val status: LiveData<HouseViewModel.GOTApiStatus> = _status
+
     private val _characterFromHouse = MutableLiveData<List<GOTResponse?>?>()
     val characterFromHouse: LiveData<List<GOTResponse?>?> = _characterFromHouse
+
     private val dispatcher = Dispatchers.IO
 
     private var fav = MutableLiveData<Favorite?>()
+
     private val _navigateOverview = MutableLiveData<GOTResponse>()
     val navigateOverview: LiveData<GOTResponse>
     get() = _navigateOverview
@@ -59,10 +65,22 @@ class HouseViewModel(
             }else {
                 val newFav = Favorite()
                 newFav.characterName = oldResponse.name
-                newFav.characterTitle = oldResponse.titles[0]
+                if(oldResponse.titles.size > 0) {
+                    newFav.characterTitle = oldResponse.titles[0]
+                }
                 newFav.characterImage = oldResponse.image
                 newFav.characterHouse = oldResponse.house
-                newFav.characterFamily = oldResponse.father +", " + oldResponse.mother
+                if(oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()){
+                    newFav.characterFamily = " "
+                }
+                else if(!oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()){
+                    newFav.characterFamily = oldResponse.father
+                }
+                else if(oldResponse.father.isNullOrEmpty() && !oldResponse.mother.isNullOrEmpty()){
+                    newFav.characterFamily = oldResponse.mother
+                }
+                else{
+                newFav.characterFamily = oldResponse.father +", " + oldResponse.mother}
                 insert(newFav)
             }
         }
@@ -92,12 +110,18 @@ class HouseViewModel(
             when(val response = repo.fetchCharactersByHouse(dispatcher, house = house)){
                 is ServiceResult.Succes -> {
                     _characterFromHouse.postValue(response.data)
+                    _status.postValue(GOTApiStatus.DONE)
+
                 }
                 is ServiceResult.Error -> {
                     Timber.d("Error retrieving: " + response.exception)
+                    _status.postValue(GOTApiStatus.ERROR)
+
                 }
                 else -> {
                     Timber.d("ruh roh")
+                    _status.postValue(GOTApiStatus.ERROR)
+
                 }
             }
         }

@@ -70,5 +70,8 @@
         <argument
             android:name="characterPassed"
             app:argType="com.bps.gotwinter2021.data.model.GOTResponse"/>
+        <action
+            android:id="@+id/action_overviewFragment_to_houseFragment2"
+            app:destination="@id/houseFragment" />
     </fragment>
 </navigation>

@@ -29,6 +29,9 @@ class FavoritesFragment : Fragment() {
         }
         binding.lifecycleOwner = this
         binding.favoritesViewModel = viewModel
+        binding.backArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
         binding.favoritesGrid.adapter = FavoritesAdapter(FavoritesClickListener{
             addFav, identifier ->
             if(identifier == "navigate"){
