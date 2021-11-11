@@ -73,5 +73,11 @@
         <action
             android:id="@+id/action_overviewFragment_to_houseFragment2"
             app:destination="@id/houseFragment" />
+        <action
+            android:id="@+id/action_overviewFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_overviewFragment_to_homeScreenFragment"
+            app:destination="@id/homeScreenFragment" />
     </fragment>
 </navigation>

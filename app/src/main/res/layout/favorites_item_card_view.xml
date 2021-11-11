@@ -12,21 +12,27 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corners">
+        android:background="@drawable/rounded_corners"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <ImageView
             android:id="@+id/fav_card_item_view_character_IV"
             android:layout_width="150dp"
             android:layout_height="180dp"
+            android:scaleType="fitXY"
             app:CharacterImg="@{favorite.characterImage}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/fav_card_item_view_name_TV"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/fav_card_item_view_name_TV"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/no_image" />
 
         <TextView
             android:id="@+id/fav_card_item_view_name_TV"
-            android:layout_width="0dp"
+            android:layout_width="150dp"
             android:layout_height="24dp"
             android:background="#B3161729 "
             android:text="@{favorite.characterName}"
@@ -44,7 +50,7 @@
             android:layout_height="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/fav_card_item_view_character_IV"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_basic_heart_fill" />
 

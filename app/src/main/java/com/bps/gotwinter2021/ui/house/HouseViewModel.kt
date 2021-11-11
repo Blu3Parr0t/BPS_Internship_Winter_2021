@@ -35,79 +35,82 @@ class HouseViewModel(
 
     private val _navigateOverview = MutableLiveData<GOTResponse>()
     val navigateOverview: LiveData<GOTResponse>
-    get() = _navigateOverview
+        get() = _navigateOverview
 
-    fun navToOverview(character: GOTResponse){
+    fun navToOverview(character: GOTResponse) {
         _navigateOverview.value = character
     }
 
-    init{
+    init {
         initializeFav()
     }
 
     private fun initializeFav() {
-        coroutineScope.launch{
+        coroutineScope.launch {
             fav.value = getFavFromDatabase()
         }
     }
 
     private suspend fun getFavFromDatabase(): Favorite? {
-        return  withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             var fav = dataSource.getNewest()
             fav
         }
     }
 
-    fun addClicked(oldResponse: GOTResponse){
+    fun addClicked(oldResponse: GOTResponse) {
         coroutineScope.launch {
-            if(checkIfFavorited(oldResponse.name)){
+            if (checkIfFavorited(oldResponse.name)) {
                 deleteOne(oldResponse.name)
-            }else {
+            } else {
                 val newFav = Favorite()
                 newFav.characterName = oldResponse.name
-                if(oldResponse.titles.size > 0) {
+
+                if (oldResponse.titles.size > 0) {
                     newFav.characterTitle = oldResponse.titles[0]
+                } else {
+                    newFav.characterTitle = " "
                 }
+
                 newFav.characterImage = oldResponse.image
                 newFav.characterHouse = oldResponse.house
-                if(oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()){
+
+                if (oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()) {
                     newFav.characterFamily = " "
-                }
-                else if(!oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()){
+                } else if (!oldResponse.father.isNullOrEmpty() && oldResponse.mother.isNullOrEmpty()) {
                     newFav.characterFamily = oldResponse.father
-                }
-                else if(oldResponse.father.isNullOrEmpty() && !oldResponse.mother.isNullOrEmpty()){
+                } else if (oldResponse.father.isNullOrEmpty() && !oldResponse.mother.isNullOrEmpty()) {
                     newFav.characterFamily = oldResponse.mother
+                } else {
+                    newFav.characterFamily = oldResponse.father + ", " + oldResponse.mother
                 }
-                else{
-                newFav.characterFamily = oldResponse.father +", " + oldResponse.mother}
                 insert(newFav)
             }
         }
     }
 
     private suspend fun deleteOne(name: String) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             dataSource.clearOne(name)
         }
     }
 
     private suspend fun checkIfFavorited(name: String): Boolean {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             val check = dataSource.findCharacter(name)
             check
         }
     }
 
     private suspend fun insert(newFav: Favorite) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             dataSource.insert(newFav)
         }
     }
 
-    fun fetchCharactersByHouse(house: String){
-        viewModelScope.launch(dispatcher){
-            when(val response = repo.fetchCharactersByHouse(dispatcher, house = house)){
+    fun fetchCharactersByHouse(house: String) {
+        viewModelScope.launch(dispatcher) {
+            when (val response = repo.fetchCharactersByHouse(dispatcher, house = house)) {
                 is ServiceResult.Succes -> {
                     _characterFromHouse.postValue(response.data)
                     _status.postValue(GOTApiStatus.DONE)
