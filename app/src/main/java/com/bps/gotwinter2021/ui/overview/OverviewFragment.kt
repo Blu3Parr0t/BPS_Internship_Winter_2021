@@ -32,7 +32,6 @@ class OverviewFragment : Fragment() {
         binding.viewModelOverview = viewModel
         binding.backArrow2.setOnClickListener {
             findNavController().popBackStack()
-            findNavController().popBackStack()
         }
         determineFamily(passedCharacter, binding)
         setInfo(passedCharacter, binding)
