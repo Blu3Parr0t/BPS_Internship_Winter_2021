@@ -1,34 +1,34 @@
 package com.bps.gotwinter2021.ui.maps
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.bps.gotwinter2021.common.secret.API.API_KEY
 import com.bps.gotwinter2021.data.model.GOTTheatre
 import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
 import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class MapsViewModel(application: Application, val repo: GoogleMapsRepo)
-    : AndroidViewModel(application){
+@HiltViewModel
+class MapsViewModel @Inject constructor(
+    private val GoogleMapsRepo: GoogleMapsRepo,
+    private val dispatchers: Dispatchers
+) : ViewModel() {
 
     private val _theaterFeed = MutableLiveData<GOTTheatre?>()
     val theaterFeed: LiveData<GOTTheatre?>
         get() = _theaterFeed
 
-    fun getStores(location: String, radius: Int, type: String,
-                  key: String = API_KEY) {
-
-        val dispatcher = Dispatchers.IO
-
-
-        viewModelScope.launch(dispatcher) {
-            when(val response = repo.fetchTheaters(dispatcher,
-                location = location, radius = radius, type = type, key = key)) {
+    fun getStores(
+        location: String, radius: Int, type: String,
+        key: String = API_KEY
+    ) {
+        viewModelScope.launch(dispatchers.IO) {
+            when (val response = GoogleMapsRepo.fetchTheaters(
+                location = location, radius = radius, type = type, key = key
+            )) {
                 is ServiceResult.Succes -> {
                     _theaterFeed.postValue(response.data)
                 }

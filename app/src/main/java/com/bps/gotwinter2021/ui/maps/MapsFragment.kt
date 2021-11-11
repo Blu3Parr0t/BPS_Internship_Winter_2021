@@ -18,11 +18,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.bps.gotwinter2021.R
-import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.common.secret.API.API_KEY
-import com.bps.gotwinter2021.data.network.repo.GoogleMapsRepo
 import com.bps.gotwinter2021.databinding.FragmentMapsBinding
 import com.bps.gotwinter2021.databinding.FragmentMapsBottomSheetDialogBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,11 +34,13 @@ import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.blurry.Blurry
 import timber.log.Timber
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+@AndroidEntryPoint
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
@@ -62,14 +63,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var binding: FragmentMapsBinding
 
-    private val viewModel: MapsViewModel by lazy {
-        createViewModel {
-            MapsViewModel(
-                application = this.requireActivity().application,
-                GoogleMapsRepo.provideGoogleMapsRepo()
-            )
-        }
-    }
+    private val viewModel: MapsViewModel by viewModels()
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -237,7 +231,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val dialog = BottomSheetDialog(this.requireContext())
         dialog.setContentView(bindingSheet.root)
         dialog.show()
-
 
         return true
     }
