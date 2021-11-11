@@ -1,40 +1,31 @@
 package com.bps.gotwinter2021.ui.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bps.gotwinter2021.R
-import com.bps.gotwinter2021.common.createViewModel
-import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.databinding.FragmentSearchResultsBinding
 import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
 import com.bps.gotwinter2021.ui.search.adapter.CharacterAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchResultsFragment : Fragment() {
 
-    private lateinit var binding: FragmentSearchResultsBinding
+    val viewModel: SearchResultsViewModel by viewModels()
 
-    private var characterPosition: Int = 0
+    private lateinit var binding: FragmentSearchResultsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val application = requireNotNull(this.activity).application
-        val database = FavoriteDatabase.getInstance(application).favoriteDatabaseDao
-
-        val viewModel: SearchResultsViewModel by lazy {
-            createViewModel {
-                SearchResultsViewModel(
-                    application, database, GOTRepo.provideGOTRepo()
-                )
-            }
-        }
-
         val adapter = CharacterAdapter(CharacterAdapter.OnClickListener { character, identifier ->
             if (identifier == "navigate") {
                 this.findNavController().navigate(
