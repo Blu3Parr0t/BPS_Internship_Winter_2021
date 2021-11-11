@@ -1,12 +1,9 @@
 package com.bps.gotwinter2021.ui.house
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -36,10 +33,14 @@ class HouseFragment : Fragment() {
         }
         binding.lifecycleOwner = this
         binding.viewModelHouse = viewModel
+        binding.backArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
         val houseSelected = HouseFragmentArgs.fromBundle(requireArguments()).houseName
         viewModel.fetchCharactersByHouse(house = "House "+ houseSelected)
 
         binding.houseFragmentTitle.text = houseSelected
+        setBackground(houseSelected, binding)
         binding.houseFragmentCharacterGrid.adapter = HouseGridAdapter(HousesFragmentOnClickListener { addCharacter, identifier ->
             if(identifier == "navigate"){
                 viewModel.navToOverview(addCharacter)
@@ -52,6 +53,28 @@ class HouseFragment : Fragment() {
             this.findNavController().navigate(HouseFragmentDirections.actionHouseFragmentToOverviewFragment(it))
         })
 
+        viewModel.status.observe(viewLifecycleOwner,{
+            when(it){
+                HouseViewModel.GOTApiStatus.LOADING->{
+                    binding.houseFragmentCharacterGrid.visibility = View.GONE
+                    binding.searchResultsLoadingHouse.visibility = View.VISIBLE
+                }
+                HouseViewModel.GOTApiStatus.DONE->{
+                    binding.houseFragmentCharacterGrid.visibility = View.VISIBLE
+                    binding.searchResultsLoadingHouse.visibility = View.GONE
+                }
+                else ->{}
+            }
+        })
         return binding.root
+    }
+
+    private fun setBackground(houseSelected: String, binding: HouseFragmentBinding) {
+        when(houseSelected){
+            "Lannister"-> binding.houseFragmentLayout.setBackgroundResource(R.drawable.background_house_lannister_blur)
+            "Targaryen"-> binding.houseFragmentLayout.setBackgroundResource(R.drawable.background_targaryen_blur)
+            "Baratheon"-> binding.houseFragmentLayout.setBackgroundResource(R.drawable.background_baratheon_blur)
+            else -> binding.houseFragmentLayout.setBackgroundResource(R.drawable.blurred_fav_bg)
+        }
     }
 }

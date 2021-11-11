@@ -9,6 +9,7 @@
             type="com.bps.gotwinter2021.ui.house.HouseViewModel" />
     </data>
 <LinearLayout
+    android:id="@+id/house_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -25,7 +26,6 @@
             style="@style/fragment_big_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="House Placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +51,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:houseCharacters="@{viewModelHouse.characterFromHouse}"
+        android:visibility="gone"
         tools:itemCount="4"
         tools:listitem="@layout/item_card_view"/>
+
+    <ImageView
+        android:id="@+id/search_results_loading_house"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/loading_animation"
+        android:visibility="visible"/>
 
 </LinearLayout>
 </layout>
