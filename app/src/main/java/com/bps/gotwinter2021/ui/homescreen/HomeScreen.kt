@@ -36,7 +36,6 @@ class HomeScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val viewModel: HomeScreenViewModel by viewModels()
-        val application = requireNotNull(this.activity).application
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home_screen, container, false)
         binding.lifecycleOwner = this
