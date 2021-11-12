@@ -87,4 +87,14 @@ dependencies {
     //DI
     implementation "com.google.dagger:hilt-android:2.38.1"
     kapt "com.google.dagger:hilt-compiler:2.38.1"
+
+    //MockK
+    def mocK = "1.12.0"
+    def coreTesting = "2.1.0"
+    testImplementation "io.mockk:mockk:$mocK"
+    testImplementation "io.mockk:mockk-agent-jvm:$mocK"
+    testImplementation "androidx.arch.core:core-common:$coreTesting"
+    testImplementation "androidx.arch.core:core-runtime:$coreTesting"
+    testImplementation "androidx.arch.core:core-testing:$coreTesting"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2"
 }

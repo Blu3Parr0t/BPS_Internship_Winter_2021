@@ -17,6 +17,14 @@ object AppModule {
     @Provides
     fun provideCoroutines() = Dispatchers
 
+    @Singleton
+    @Provides
+    fun provideIO() = Dispatchers.IO
+
+    @Singleton
+    @Provides
+    fun provideUI() = Dispatchers.Main
+
     //Glide
 
     //Gson

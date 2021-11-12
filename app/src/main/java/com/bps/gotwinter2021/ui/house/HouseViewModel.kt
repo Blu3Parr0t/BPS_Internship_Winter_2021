@@ -19,7 +19,8 @@ import javax.inject.Inject
 class HouseViewModel @Inject constructor(
     private val app: Application,
     private val GOTRepo: GOTRepo,
-    private val GOTDBDao: FavoriteDatabaseDao
+    private val GOTDBDao: FavoriteDatabaseDao,
+    private val dispatchers: CoroutineDispatcher
 ) : ViewModel() {
     enum class GOTApiStatus { LOADING, ERROR, DONE }
 
@@ -122,7 +123,7 @@ class HouseViewModel @Inject constructor(
     }
 
     fun fetchCharactersByHouse(house: String) {
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatchers) {
             when (val response = GOTRepo.fetchCharactersByHouse(house = house)) {
                 is ServiceResult.Succes -> {
                     _characterFromHouse.postValue(response.data)
