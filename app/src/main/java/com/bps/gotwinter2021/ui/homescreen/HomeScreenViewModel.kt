@@ -5,8 +5,11 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeScreenViewModel(val app: Application): ViewModel() {
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(private val app: Application): ViewModel() {
 
     private val _searchText = MutableLiveData<String?>()
     val searchText: LiveData<String?> = _searchText

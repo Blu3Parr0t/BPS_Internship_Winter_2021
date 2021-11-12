@@ -18,6 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class SearchResultsViewModel @Inject constructor(
     private val app: Application,
     private val GOTRepo: GOTRepo,
-    private val GOTDBDao: FavoriteDatabaseDao
+    private val GOTDBDao: FavoriteDatabaseDao,
+    private val dispatcher: Dispatchers
 ) : ViewModel() {
 
     enum class GOTApiStatus { LOADING, ERROR, DONE }
@@ -49,10 +51,8 @@ class SearchResultsViewModel @Inject constructor(
     val isFavorite: LiveData<Boolean> = _isFavorite
 
 
-    private val dispatcher = Dispatchers.IO
-
     fun fetchCharactersByName(name: String) {
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatcher.IO) {
             when (val response = GOTRepo.fetchCharacterByName(name = name)) {
                 is ServiceResult.Succes -> {
                     _characters.postValue(response.data)
@@ -155,4 +155,3 @@ class SearchResultsViewModel @Inject constructor(
         }
     }
 }
-
