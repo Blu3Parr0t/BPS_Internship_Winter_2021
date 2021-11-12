@@ -4,12 +4,28 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.favorites.database.Favorite
 import com.bps.gotwinter2021.favorites.database.FavoriteDatabaseDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class FavoritesViewModel(val application: Application, val dataSource: FavoriteDatabaseDao) : ViewModel() {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor
+    (private val app: Application,
+     private val GOTDBDao: FavoriteDatabaseDao)
+    : ViewModel() {
+
+    private val _navYet = MutableLiveData<Boolean>()
+    val navYet: LiveData<Boolean> = _navYet
+
+    fun doneNav(){
+        _navYet.value = false
+    }
+    fun justNav(){
+        _navYet.value = true
+    }
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -22,7 +38,7 @@ class FavoritesViewModel(val application: Application, val dataSource: FavoriteD
     }
 
     private val fav = MutableLiveData<Favorite?>()
-    val favs = dataSource.getAllCharacters()
+    val favs = GOTDBDao.getAllCharacters()
 
     init{
         initializeFav()
@@ -36,7 +52,7 @@ class FavoritesViewModel(val application: Application, val dataSource: FavoriteD
 
     private suspend fun getFavFromDatabase(): Favorite? {
         return withContext(Dispatchers.IO){
-            var fav = dataSource.getNewest()
+            var fav = GOTDBDao.getNewest()
             fav
         }
     }
@@ -58,20 +74,20 @@ class FavoritesViewModel(val application: Application, val dataSource: FavoriteD
 
     private suspend fun deleteOne(name: String) {
         withContext(Dispatchers.IO){
-            dataSource.clearOne(name)
+            GOTDBDao.clearOne(name)
         }
     }
 
     private suspend fun checkIfFavorited(name: String): Boolean {
         return withContext(Dispatchers.IO){
-            val check = dataSource.findCharacter(name)
+            val check = GOTDBDao.findCharacter(name)
             check
         }
     }
 
     private suspend fun insert(newFav: Favorite) {
         withContext(Dispatchers.IO){
-            dataSource.insert(newFav)
+            GOTDBDao.insert(newFav)
         }
     }
 

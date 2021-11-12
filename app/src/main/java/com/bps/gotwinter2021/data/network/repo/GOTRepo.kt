@@ -14,7 +14,8 @@ interface GOTRepo {
         name: String
     ): ServiceResult<GOTResponse?>
 
-    suspend fun fetchCharactersByHouse(viewModelDispatcher: CoroutineDispatcher, house: String): ServiceResult<List<GOTResponse?>?>
+    suspend fun fetchCharactersByHouse(
+        house: String): ServiceResult<List<GOTResponse?>?>
 
     companion object{
         fun provideGOTRepo(dispatcher: Dispatchers, retroObject: GOTApiEndPoint): GOTRepo{

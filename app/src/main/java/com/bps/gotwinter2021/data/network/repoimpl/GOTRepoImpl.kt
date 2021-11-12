@@ -18,10 +18,9 @@ class GOTRepoImpl @Inject constructor(
 ) : GOTRepo {
 
     override suspend fun fetchCharactersByHouse(
-        viewModelDispatcher: CoroutineDispatcher,
         house: String
     ): ServiceResult<List<GOTResponse?>?> {
-        return withContext(viewModelDispatcher) {
+        return withContext(dispatcher.IO) {
             val dataResponse = retroObject.fetchCharactersByHouse(house = house)
             if (dataResponse.isSuccessful) {
                 ServiceResult.Succes(dataResponse.body())

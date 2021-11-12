@@ -10,21 +10,27 @@ import com.bps.gotwinter2021.data.network.networkmodel.ServiceResult
 import com.bps.gotwinter2021.data.network.repo.GOTRepo
 import com.bps.gotwinter2021.favorites.database.Favorite
 import com.bps.gotwinter2021.favorites.database.FavoriteDatabaseDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import timber.log.Timber
+import javax.inject.Inject
 
-class HouseViewModel(
-    val application: Application,
-    val repo: GOTRepo,
-    val dataSource: FavoriteDatabaseDao
+@HiltViewModel
+class HouseViewModel @Inject constructor(
+    private val app: Application,
+    private val GOTRepo: GOTRepo,
+    private val GOTDBDao: FavoriteDatabaseDao
 ) : ViewModel() {
     enum class GOTApiStatus { LOADING, ERROR, DONE }
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val _status = MutableLiveData<HouseViewModel.GOTApiStatus>()
-    val status: LiveData<HouseViewModel.GOTApiStatus> = _status
+    private val _navYet = MutableLiveData<Boolean>()
+    val navYet: LiveData<Boolean> = _navYet
+
+    private val _status = MutableLiveData<GOTApiStatus>()
+    val status: LiveData<GOTApiStatus> = _status
 
     private val _characterFromHouse = MutableLiveData<List<GOTResponse?>?>()
     val characterFromHouse: LiveData<List<GOTResponse?>?> = _characterFromHouse
@@ -41,6 +47,13 @@ class HouseViewModel(
         _navigateOverview.value = character
     }
 
+    fun doneNav(){
+        _navYet.value = false
+    }
+    fun justNav(){
+        _navYet.value = true
+    }
+
     init {
         initializeFav()
     }
@@ -53,7 +66,7 @@ class HouseViewModel(
 
     private suspend fun getFavFromDatabase(): Favorite? {
         return withContext(Dispatchers.IO) {
-            var fav = dataSource.getNewest()
+            var fav = GOTDBDao.getNewest()
             fav
         }
     }
@@ -91,40 +104,37 @@ class HouseViewModel(
 
     private suspend fun deleteOne(name: String) {
         withContext(Dispatchers.IO) {
-            dataSource.clearOne(name)
+            GOTDBDao.clearOne(name)
         }
     }
 
     private suspend fun checkIfFavorited(name: String): Boolean {
         return withContext(Dispatchers.IO) {
-            val check = dataSource.findCharacter(name)
+            val check = GOTDBDao.findCharacter(name)
             check
         }
     }
 
     private suspend fun insert(newFav: Favorite) {
         withContext(Dispatchers.IO) {
-            dataSource.insert(newFav)
+            GOTDBDao.insert(newFav)
         }
     }
 
     fun fetchCharactersByHouse(house: String) {
         viewModelScope.launch(dispatcher) {
-            when (val response = repo.fetchCharactersByHouse(dispatcher, house = house)) {
+            when (val response = GOTRepo.fetchCharactersByHouse(house = house)) {
                 is ServiceResult.Succes -> {
                     _characterFromHouse.postValue(response.data)
                     _status.postValue(GOTApiStatus.DONE)
-
                 }
                 is ServiceResult.Error -> {
                     Timber.d("Error retrieving: " + response.exception)
                     _status.postValue(GOTApiStatus.ERROR)
-
                 }
                 else -> {
                     Timber.d("ruh roh")
                     _status.postValue(GOTApiStatus.ERROR)
-
                 }
             }
         }
