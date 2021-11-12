@@ -84,9 +84,9 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     fun searchButton() {
-        _status.value = GOTApiStatus.LOADING
         val length = _searchText.value?.length ?: 0
         if (length > 0) {
+            _status.value = GOTApiStatus.LOADING
             fetchCharactersByName(
                 Capitalize(_searchText.value.toString())
             )
@@ -116,14 +116,15 @@ class SearchResultsViewModel @Inject constructor(
 
     fun clickFavorite(character: GOTResponse) {
         viewModelScope.launch {
-            checkFavorite(character)
-            if (_isFavorite.value == true) {
+            if (isFavorite(character)) {
                 deleteFavorite(character)
             } else {
                 addFavorite(character)
             }
+            checkFavorite(character)
         }
     }
+
 
     fun checkFavorite(character: GOTResponse) {
         viewModelScope.launch {
@@ -133,12 +134,15 @@ class SearchResultsViewModel @Inject constructor(
 
     private suspend fun addFavorite(character: GOTResponse) {
         withContext(Dispatchers.IO) {
-            val addCharacter = Favorite()
-            addCharacter.characterName = character.name
-            addCharacter.characterHouse = character.house
-            addCharacter.characterTitle = character.titles[0]
-            addCharacter.characterFamily = character.father + character.mother
-            addCharacter.characterImage = character.image
+            var title = ""
+            if (character.titles.isNotEmpty()) title = character.titles[0]
+            val addCharacter = Favorite(
+                characterName = character.name,
+                characterHouse = character.house,
+                characterTitle = title,
+                characterFamily = character.father + character.mother,
+                characterImage = character.image
+            )
             GOTDBDao.insert(addCharacter)
         }
     }

@@ -1,7 +1,6 @@
 package com.bps.gotwinter2021.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bps.gotwinter2021.R
 import com.bps.gotwinter2021.databinding.FragmentSearchResultsBinding
-import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
 import com.bps.gotwinter2021.ui.search.adapter.CharacterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,7 +36,7 @@ class SearchResultsFragment : Fragment() {
             }
         })
         var search =
-            SearchResultsFragmentArgs.fromBundle(requireArguments()).searchString.toLowerCase()
+            SearchResultsFragmentArgs.fromBundle(requireArguments()).searchString.toLowerCase().trim()
         search = viewModel.Capitalize(search)
 
         binding =
