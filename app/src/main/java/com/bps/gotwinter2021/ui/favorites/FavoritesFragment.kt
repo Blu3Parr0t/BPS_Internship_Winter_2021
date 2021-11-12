@@ -1,32 +1,24 @@
 package com.bps.gotwinter2021.ui.favorites
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.FavoritesFragmentBinding
-import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
+    val viewModel: FavoritesViewModel by viewModels()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FavoritesFragmentBinding.inflate(inflater)
-        val application = requireNotNull(this.activity).application
-        val dataSource = FavoriteDatabase.getInstance(application).favoriteDatabaseDao
 
-        val viewModel: FavoritesViewModel by lazy{
-            createViewModel {
-                FavoritesViewModel(
-                    requireActivity().application,
-                    dataSource
-                )
-            }
-        }
         binding.lifecycleOwner = this
         binding.favoritesViewModel = viewModel
         binding.backArrow.setOnClickListener {
@@ -35,6 +27,7 @@ class FavoritesFragment : Fragment() {
         binding.favoritesGrid.adapter = FavoritesAdapter(FavoritesClickListener{
             addFav, identifier ->
             if(identifier == "navigate"){
+                viewModel.justNav()
                 viewModel.navToOverview(addFav)
             }
             else{
@@ -43,9 +36,12 @@ class FavoritesFragment : Fragment() {
         })
 
         viewModel.navigateOverview.observe(viewLifecycleOwner, Observer{
+            if(viewModel.navYet.value == true){
             val arrayTitles: List<String> = it.characterTitle.split(",").map {it.trim()}
             val newOver = GOTResponse(id = "", name = it.characterName, image = it.characterImage, house = it.characterHouse, titles = arrayTitles, father = it.characterFamily!!, mother = "")
-            this.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToOverviewFragment(newOver))
+            this.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToOverviewFragment(newOver))}
+            viewModel.doneNav()
+
         })
         return binding.root
     }

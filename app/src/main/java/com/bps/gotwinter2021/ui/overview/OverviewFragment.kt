@@ -6,27 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bps.gotwinter2021.common.createViewModel
 import com.bps.gotwinter2021.data.model.GOTResponse
 import com.bps.gotwinter2021.databinding.OverviewFragmentBinding
-import com.bps.gotwinter2021.favorites.database.FavoriteDatabase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OverviewFragment : Fragment() {
+
+    val viewModel: OverviewViewModel by viewModels()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = OverviewFragmentBinding.inflate(inflater)
         val passedCharacter = OverviewFragmentArgs.fromBundle(requireArguments()).characterPassed
-        val application = requireNotNull(activity).application
-        val dataSource = FavoriteDatabase.getInstance(application).favoriteDatabaseDao
-
-        val viewModel: OverviewViewModel by lazy{
-            createViewModel {
-                OverviewViewModel(requireActivity().application,
-                    dataSource,
-                    passedCharacter
-                )
-            }
-        }
+        viewModel.getPassedArg(passedCharacter)
 
         binding.lifecycleOwner = this
         binding.viewModelOverview = viewModel
@@ -41,7 +35,7 @@ class OverviewFragment : Fragment() {
 
     private fun setInfo(passedCharacter: GOTResponse, binding: OverviewFragmentBinding) {
         if(passedCharacter.titles.size > 0) {
-            if(passedCharacter.titles[0] != " "){
+            if(passedCharacter.titles[0] == " "){
                 binding.characterTitle.text = " "
             }else {
                 val title: String = "<b> Title: </b>" + passedCharacter.titles[0]
