@@ -15,4 +15,5 @@
     <color name="subtitle_background">#b31b1818</color>
     <color name="transparent_background">#00FFFFFF</color>
     <color name="search_field_background">#BF000000</color>
+    <color name="bg_grey">#B3161729</color>
 </resources>

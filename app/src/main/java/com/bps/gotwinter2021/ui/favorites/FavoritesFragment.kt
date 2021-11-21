@@ -35,14 +35,24 @@ class FavoritesFragment : Fragment() {
             }
         })
 
-        viewModel.navigateOverview.observe(viewLifecycleOwner, Observer{
-            if(viewModel.navYet.value == true){
-            val arrayTitles: List<String> = it.characterTitle.split(",").map {it.trim()}
-            val newOver = GOTResponse(id = "", name = it.characterName, image = it.characterImage, house = it.characterHouse, titles = arrayTitles, father = it.characterFamily!!, mother = "")
-            this.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToOverviewFragment(newOver))}
+        viewModel.navigateOverview.observe(viewLifecycleOwner) {
+            if (viewModel.navYet.value == true) {
+                val arrayTitles: List<String> = it.characterTitle.split(",").map { it.trim() }
+                val newOver = GOTResponse(
+                    id = "",
+                    name = it.characterName,
+                    image = it.characterImage,
+                    house = it.characterHouse,
+                    titles = arrayTitles,
+                    father = it.characterFamily,
+                    mother = ""
+                )
+                this.findNavController().navigate(
+                    FavoritesFragmentDirections.actionFavoritesFragmentToOverviewFragment(newOver)
+                )
+            }
             viewModel.doneNav()
-
-        })
+        }
         return binding.root
     }
 }
