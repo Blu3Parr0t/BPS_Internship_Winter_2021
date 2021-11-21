@@ -27,43 +27,12 @@ class OverviewFragment : Fragment() {
         binding.backArrow2.setOnClickListener {
             findNavController().popBackStack()
         }
-        determineFamily(passedCharacter, binding)
-        setInfo(passedCharacter, binding)
+        binding.characterFamily.text = viewModel.determineFamily(passedCharacter)
+        binding.characterTitle.text = viewModel.setTitle(passedCharacter)
 
-        return binding.root
-    }
-
-    private fun setInfo(passedCharacter: GOTResponse, binding: OverviewFragmentBinding) {
-        if(passedCharacter.titles.size > 0) {
-            if(passedCharacter.titles[0] == " "){
-                binding.characterTitle.text = " "
-            }else {
-                val title: String = "<b> Title: </b>" + passedCharacter.titles[0]
-                binding.characterTitle.text = Html.fromHtml(title)
-            }
-        }
         val house: String = "<b> House: </b>" + passedCharacter.house
         binding.characterHouse.text = Html.fromHtml(house)
-    }
 
-    private fun determineFamily(passedCharacter: GOTResponse, binding: OverviewFragmentBinding) {
-        if(passedCharacter.father.isNullOrEmpty() && passedCharacter.mother.isNullOrEmpty()) {
-            binding.characterFamily.text = " "
-        }
-        else if(passedCharacter.father.isNullOrEmpty() && !passedCharacter.mother.isNullOrEmpty() && passedCharacter.mother != " "){
-            val justM: String = "<b> Family: </b>" + passedCharacter.mother
-            binding.characterFamily.text = Html.fromHtml(justM)
-        }
-        else if(!passedCharacter.father.isNullOrEmpty() && passedCharacter.mother.isNullOrEmpty() && passedCharacter.father != " "){
-            val justF: String = "<b> Family: </b>" + passedCharacter.father
-            binding.characterFamily.text = Html.fromHtml(justF)
-        }
-        else if(passedCharacter.father == " " || passedCharacter.mother == " "){
-            binding.characterFamily.text = " "
-        }
-        else{
-            val family: String = "<b> Family: </b>" + passedCharacter.father +", " + passedCharacter.mother
-            binding.characterFamily.text = Html.fromHtml(family)
-        }
+        return binding.root
     }
 }
